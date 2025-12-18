@@ -6,7 +6,8 @@ import { DirectionProvider as RadixDirectionProvider } from "@radix-ui/react-dir
 const DirectionProvider = ({ children, lang }: { children: React.ReactNode; lang: string }) => {
   const { isRtl } = useThemeStore();
 
-  const direction = lang === "ar" || isRtl ? "rtl" : "ltr";
+  // With fixed vi-VN locale, use RTL only when explicitly toggled in store
+  const direction = isRtl ? "rtl" : "ltr";
 
   return (
     <div dir={direction}>

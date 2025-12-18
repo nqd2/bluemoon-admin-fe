@@ -53,7 +53,7 @@ const ThemeCustomize = ({
         <ScrollArea className="h-[calc(100%-120px)] -mx-6 px-6">
           <div className=" space-y-8 mt-3">
             <SelectLayout />
-            <SelectTheme />
+            {/* <SelectTheme /> */}
             <RtlSwitcher />
             <ThemeChange />
             <SidebarChange />

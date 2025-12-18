@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { cn } from "@/lib/utils";
-import ThemeButton from "./theme-button";
+// import ThemeButton from "./theme-button";
 import { useSidebar, useThemeStore } from "@/store";
 import ProfileInfo from "./profile-info";
 import VerticalHeader from "./vertical-header";
@@ -22,7 +22,7 @@ const NavTools = ({ isDesktop, isMobile, sidebarType }: { isDesktop: boolean; is
       {isDesktop && <Language />}
       {isDesktop && <FullScreen />}
 
-      <ThemeButton />
+      {/* <ThemeButton /> */}
       <Inbox />
       <NotificationMessage />
 

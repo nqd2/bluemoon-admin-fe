@@ -1,5 +1,5 @@
-import "../assets/scss/globals.scss";
-import "../assets/scss/theme.scss";
+import "./assets/scss/globals.scss";
+import "./assets/scss/theme.scss";
 import { Inter } from "next/font/google";
 import { siteConfig } from "@/config/site";
 import Providers from "@/provider/providers";
@@ -18,7 +18,9 @@ export const metadata = {
   description: siteConfig.description,
 };
 
-export default function RootLayout({ children, params: { lang } }: { children: React.ReactNode; params: { lang: string } }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const lang = "vi";
+
   return (
     <html lang={lang}>
       <AuthProvider>

@@ -21,8 +21,9 @@ interface ThemeStoreState {
 export const useThemeStore = create<ThemeStoreState>()(
  persist(
       (set) => ({
-           theme: siteConfig.theme,
-      setTheme: (theme) => set({ theme }),
+      // Lock theme to initial siteConfig.theme; ignore further changes
+      theme: siteConfig.theme,
+      setTheme: () => {},
       radius: siteConfig.radius,
       setRadius: (value) => set({ radius: value }),
       layout: siteConfig.layout,
