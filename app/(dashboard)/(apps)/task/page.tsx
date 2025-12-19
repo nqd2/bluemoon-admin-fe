@@ -2,6 +2,8 @@ import { getTasks } from "@/config/project-config";
 import { getContacts } from "../chat/chat-config";
 import ViewTask from "./view-task";
 
+export const dynamic = "force-dynamic";
+
 const TaskPage = async () => {
   const tasks = await getTasks();
   const contacts = await getContacts();

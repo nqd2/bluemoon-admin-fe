@@ -7,6 +7,8 @@ import {
 import KanbanBreadCrumbs from "./bread-crumbs";
 import TaskBoard from "@/components/task-board";
 
+export const dynamic = "force-dynamic";
+
 const Kanban = async () => {
   const boards = await getBoards();
   const tasks = await getTasks();
