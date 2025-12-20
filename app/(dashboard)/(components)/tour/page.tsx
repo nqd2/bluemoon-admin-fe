@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ShepherdTour, ShepherdTourContext, Tour } from "react-shepherd";
 import { Icon } from "@iconify/react";
 import newSteps from "./steps";
-import "shepherd.js/dist/css/shepherd.css";
+// import "shepherd.js/dist/css/shepherd.css";
 
 import tourlogo from "@/public/images/watermark/codeshaperlogo1.png";
 import Image from "next/image";

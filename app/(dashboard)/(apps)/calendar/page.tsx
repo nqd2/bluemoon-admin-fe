@@ -1,7 +1,7 @@
 import { getCategories, getEvents } from "@/config/calendar.config";
 import CalendarView from "./calender-view";
 
-
+export const dynamic = "force-dynamic";
 
 const CalenderPage = async () => {
   const events = await getEvents();

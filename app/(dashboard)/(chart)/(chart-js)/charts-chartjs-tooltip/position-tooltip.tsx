@@ -33,7 +33,7 @@ const customTooltip = (tooltipItems: TooltipItem<'line'>[]) => {
   let sum = 0;
 
   tooltipItems.forEach(function (tooltipItem) {
-    sum += tooltipItem.parsed.y;
+    sum += tooltipItem.parsed.y ?? 0;
   });
   return "Sum: " + sum;
 };

@@ -244,9 +244,9 @@ const BreadcrumbItem = React.forwardRef<HTMLSpanElement, any>(
                 disabled && !iscurrent,
             }
           )}
-          aria-current={ariaCurrent}
-          data-state={dataState}
-          data-disabled={dataDisabled}
+          {...(ariaCurrent && { "aria-current": ariaCurrent })}
+          {...(dataState && { "data-state": dataState })}
+          {...(dataDisabled && { "data-disabled": dataDisabled })}
           onClick={handleClick}
           {...props}
         >
