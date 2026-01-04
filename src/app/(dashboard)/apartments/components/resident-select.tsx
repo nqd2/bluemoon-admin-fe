@@ -21,7 +21,6 @@ import { useDebounce } from "../../../../hooks/use-debounce";
 import { getResidents } from "@/action/resident-action";
 import { Resident } from "../../residents/types";
 
-// Nếu chưa có hook useDebounce, tôi sẽ implement debounce thủ công trong useEffect
 
 interface ResidentSelectProps {
   value?: string;
@@ -63,7 +62,7 @@ export function ResidentSelect({ value, onChange, error }: ResidentSelectProps) 
     try {
       const res = await getResidents({ keyword: search, limit: 10, page: 1 });
       if (res.success && res.data) {
-        setResidents(res.data.data);
+        setResidents(res.data.residents);
       }
     } catch (e) {
       console.error(e);

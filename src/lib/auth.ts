@@ -5,13 +5,13 @@ interface AdminUser {
   _id: string;
   username: string;
   role: string;
-  token: string;
 }
 
 interface BackendResponse {
   success: boolean;
-  message: string;
-  data?: AdminUser;
+  token?: string;
+  user?: AdminUser;
+  message?: string;
   errors?: any[];
 }
 
@@ -29,10 +29,10 @@ export const authOptions: AuthOptions = {
           return null;
         }
 
-        const backendUrl = process.env.BACKEND_URL || "http://localhost:3001";
+        const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
 
         if (!backendUrl) {
-          console.error("ADMIN_BACKEND_URL is not defined");
+          console.error("BACKEND_URL is not defined");
           throw new Error("Lỗi cấu hình máy chủ");
         }
 
@@ -50,30 +50,38 @@ export const authOptions: AuthOptions = {
 
           const responseData: BackendResponse = await res.json();
 
-          // Kiểm tra response thành công (200) VÀ cờ success: true
-          if (res.ok && responseData.success && responseData.data) {
-            
+          // Kiểm tra response thành công (200) VÀ cờ success: true VÀ có user và token
+          if (res.ok && responseData.success && responseData.user && responseData.token) {
             // Nếu thành công, return đối tượng user
             return {
-              id: responseData.data._id,
-              name: responseData.data.username,
+              id: responseData.user._id,
+              name: responseData.user.username,
               email: credentials.username, // Backend không trả về email, ta dùng lại từ form
-              role: responseData.data.role, // Thêm role
-              accessToken: responseData.data.token, // Token JWT từ backend
+              role: responseData.user.role, // Thêm role
+              accessToken: responseData.token, // Token JWT từ backend (ở root level)
             };
           } else {
             // Ném lỗi với message từ backend
-            throw new Error(responseData.message || "Email hoặc mật khẩu không đúng");
+            throw new Error(responseData.message || "Username hoặc mật khẩu không đúng");
           }
         } catch (error: any) {
-          console.error("Authorize error:", error.message);
+          // Nếu là lỗi network hoặc parse JSON
+          if (error.name === 'TypeError' || error.message.includes('fetch')) {
+            throw new Error("Không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
+          }
           throw new Error(error.message);
         }
       },
     }),
   ],
 
-  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+  secret: (() => {
+    const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
+    if (!secret) {
+      throw new Error("AUTH_SECRET or NEXTAUTH_SECRET environment variable is required");
+    }
+    return secret;
+  })(),
   
   session: {
     strategy: "jwt",
@@ -96,8 +104,8 @@ export const authOptions: AuthOptions = {
         const now = Date.now();
         const role = token.role as string;
         
-        // sysops: 2 ngày (48 giờ), các user khác: 1 giờ
-        const sessionDuration = role === 'sysops' 
+        // admin: 2 ngày (48 giờ), các user khác: 1 giờ
+        const sessionDuration = role === 'admin' 
           ? 2 * 24 * 60 * 60 * 1000  // 2 days
           : 60 * 60 * 1000;           // 1 hour
         
@@ -121,22 +129,6 @@ export const authOptions: AuthOptions = {
         (session.user as any).role = token.role;
       }
       return session;
-    },
-    async redirect({ url, baseUrl }) {
-      // Nếu redirect về /login hoặc /register, chuyển về /dashboard
-      if (url.includes("/login") || url.includes("/register")) {
-        return `${baseUrl}/dashboard`;
-      }
-      // Nếu là relative URL và không phải auth page, cho phép
-      if (url.startsWith("/") && !url.startsWith("/login") && !url.startsWith("/register")) {
-        return `${baseUrl}${url}`;
-      }
-      // Nếu là absolute URL và cùng domain, cho phép
-      if (url.startsWith(baseUrl)) {
-        return url;
-      }
-      // Mặc định về dashboard
-      return `${baseUrl}/dashboard`;
     },
   },
 

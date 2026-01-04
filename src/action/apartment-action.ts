@@ -1,5 +1,4 @@
-"use server";
-
+import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
@@ -25,9 +24,6 @@ async function getAccessToken(): Promise<string | null> {
   return (session?.user as any)?.accessToken || null;
 }
 
-/**
- * Lấy danh sách căn hộ
- */
 export async function getApartments(params?: {
   page?: number;
   limit?: number;
@@ -35,14 +31,17 @@ export async function getApartments(params?: {
 }): Promise<ActionResponse<ApartmentListResponse>> {
   try {
     const token = await getAccessToken();
-    if (!token) return { success: false, message: "Chưa đăng nhập" };
+    if (!token) {
+      redirect("/login");
+    }
 
     const searchParams = new URLSearchParams();
     if (params?.page) searchParams.set("page", params.page.toString());
     if (params?.limit) searchParams.set("limit", params.limit.toString());
     if (params?.keyword) searchParams.set("keyword", params.keyword);
 
-    const res = await fetch(`${process.env.BACKEND_URL}/api/apartments?${searchParams}`, {
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
+    const res = await fetch(`${backendUrl}/api/apartments?${searchParams}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -69,9 +68,12 @@ export async function getApartments(params?: {
 export async function getApartmentById(id: string): Promise<ActionResponse<Apartment>> {
   try {
     const token = await getAccessToken();
-    if (!token) return { success: false, message: "Chưa đăng nhập" };
+    if (!token) {
+      redirect("/login");
+    }
 
-    const res = await fetch(`${process.env.BACKEND_URL}/api/apartments/${id}`, {
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
+    const res = await fetch(`${backendUrl}/api/apartments/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -101,9 +103,12 @@ export async function createApartment(
 ): Promise<ActionResponse<Apartment>> {
   try {
     const token = await getAccessToken();
-    if (!token) return { success: false, message: "Chưa đăng nhập" };
+    if (!token) {
+      redirect("/login");
+    }
 
-    const res = await fetch(`${process.env.BACKEND_URL}/api/apartments`, {
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
+    const res = await fetch(`${backendUrl}/api/apartments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -138,9 +143,12 @@ export async function addMemberToApartment(
 ): Promise<ActionResponse> {
   try {
     const token = await getAccessToken();
-    if (!token) return { success: false, message: "Chưa đăng nhập" };
+    if (!token) {
+      redirect("/login");
+    }
 
-    const res = await fetch(`${process.env.BACKEND_URL}/api/apartments/${apartmentId}/members`, {
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
+    const res = await fetch(`${backendUrl}/api/apartments/${apartmentId}/members`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

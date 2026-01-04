@@ -1,5 +1,6 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
@@ -29,9 +30,6 @@ async function getAccessToken(): Promise<string | null> {
   return (session?.user as any)?.accessToken || null;
 }
 
-/**
- * Lấy danh sách residents với phân trang và tìm kiếm
- */
 export async function getResidents(params?: {
     page?: number;
     limit?: number;
@@ -40,7 +38,7 @@ export async function getResidents(params?: {
   try {
     const token = await getAccessToken();
     if (!token) {
-      return { success: false, message: "Chưa đăng nhập" };
+      redirect("/login");
     }
 
     const searchParams = new URLSearchParams();
@@ -48,7 +46,8 @@ export async function getResidents(params?: {
     if (params?.limit) searchParams.set("limit", params.limit.toString());
     if (params?.keyword) searchParams.set("keyword", params.keyword);
 
-    const url = `${process.env.BACKEND_URL}/api/residents?${searchParams.toString()}`;
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
+    const url = `${backendUrl}/api/residents?${searchParams.toString()}`;
 
     const response = await fetch(url, {
       method: "GET",
@@ -61,6 +60,12 @@ export async function getResidents(params?: {
 
     const data = await response.json();
 
+    console.log("\n--- Debug getResidents ---");
+    console.log("URL:", url);
+    console.log("Token exists:", !!token);
+    console.log("Response Status:", response.status);
+    // console.log("Response Data Preview:", JSON.stringify(data).substring(0, 200));
+    
     if (!response.ok) {
       console.error("Fetch failed:", data);
       return {
@@ -92,7 +97,8 @@ export async function getResidentById(id: string): Promise<ActionResponse<Reside
       return { success: false, message: "Chưa đăng nhập" };
     }
 
-    const response = await fetch(`${process.env.BACKEND_URL}/api/residents/${id}`, {
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
+    const response = await fetch(`${backendUrl}/api/residents/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -135,7 +141,8 @@ export async function createResident(
       return { success: false, message: "Chưa đăng nhập" };
     }
 
-    const response = await fetch(`${process.env.BACKEND_URL}/api/residents`, {
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
+    const response = await fetch(`${backendUrl}/api/residents`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -183,7 +190,8 @@ export async function updateResident(
       return { success: false, message: "Chưa đăng nhập" };
     }
 
-    const response = await fetch(`${process.env.BACKEND_URL}/api/residents/${id}`, {
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
+    const response = await fetch(`${backendUrl}/api/residents/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -228,7 +236,8 @@ export async function deleteResident(id: string): Promise<ActionResponse> {
       return { success: false, message: "Chưa đăng nhập" };
     }
 
-    const response = await fetch(`${process.env.BACKEND_URL}/api/residents/${id}`, {
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
+    const response = await fetch(`${backendUrl}/api/residents/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

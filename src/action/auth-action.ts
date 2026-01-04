@@ -54,8 +54,9 @@ export async function loginAction(
   const { username, password } = validatedFields.data;
 
   try {
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
     const response = await fetch(
-      `${process.env.BACKEND_URL}/api/auth/login`,
+      `${backendUrl}/api/auth/login`,
       {
         method: "POST",
         headers: {
@@ -124,8 +125,9 @@ export async function registerAction(
   const { username, password, code } = validatedFields.data;
 
   try {
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
     const response = await fetch(
-      `${process.env.BACKEND_URL}/api/auth/register`,
+      `${backendUrl}/api/auth/register`,
       {
         method: "POST",
         headers: {
