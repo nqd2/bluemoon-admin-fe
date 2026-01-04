@@ -18,10 +18,10 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { SiteLogo } from "@/components/svg";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { loginAction, AuthState } from "@/action/auth-action";
+import { registerAction, AuthState } from "@/action/auth-action";
 
-// Schema validate theo FE-01: username (min 6) + password (min 6)
-const loginSchema = z.object({
+// Schema validate: username (min 6) + password (min 6) + registration code
+const registerSchema = z.object({
   username: z
     .string()
     .min(1, { message: "Username không được để trống" })
@@ -30,21 +30,28 @@ const loginSchema = z.object({
     .string()
     .min(1, { message: "Mật khẩu không được để trống" })
     .min(6, { message: "Mật khẩu phải có ít nhất 6 ký tự" }),
+  confirmPassword: z
+    .string()
+    .min(1, { message: "Xác nhận mật khẩu không được để trống" }),
+  code: z
+    .string()
+    .min(1, { message: "Mã đăng ký không được để trống" }),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Mật khẩu xác nhận không khớp",
+  path: ["confirmPassword"],
 });
 
-type LoginFormData = z.infer<typeof loginSchema>;
+type RegisterFormData = z.infer<typeof registerSchema>;
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const router = useRouter();
   const [isPending, startTransition] = React.useTransition();
-  const [passwordType, setPasswordType] = React.useState<"password" | "text">(
-    "password"
-  );
+  const [passwordType, setPasswordType] = React.useState<"password" | "text">("password");
   const isDesktop2xl = useMediaQuery("(max-width: 1530px)");
 
   // Server Action state
   const [state, formAction] = useFormState<AuthState | null, FormData>(
-    loginAction,
+    registerAction,
     null
   );
 
@@ -53,12 +60,14 @@ const LoginForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
     mode: "onBlur",
     defaultValues: {
       username: "",
       password: "",
+      confirmPassword: "",
+      code: "",
     },
   });
 
@@ -75,10 +84,11 @@ const LoginForm = () => {
   };
 
   // Submit form qua Server Action
-  const onSubmit = (data: LoginFormData) => {
+  const onSubmit = (data: RegisterFormData) => {
     const formData = new FormData();
     formData.append("username", data.username);
     formData.append("password", data.password);
+    formData.append("code", data.code);
 
     startTransition(() => {
       formAction(formData);
@@ -94,10 +104,10 @@ const LoginForm = () => {
 
       {/* Header */}
       <div className="2xl:mt-8 mt-6 2xl:text-3xl text-2xl font-bold text-default-900">
-        Chào mừng bạn!
+        Tạo tài khoản mới
       </div>
       <div className="2xl:text-lg text-base text-default-600 2xl:mt-2 leading-6">
-        Đăng nhập để tiếp tục vào hệ thống quản trị.
+        Vui lòng nhập mã đăng ký được cung cấp bởi quản trị viên.
       </div>
 
       {/* Error Alert - Hiển thị lỗi từ API */}
@@ -107,14 +117,38 @@ const LoginForm = () => {
         </Alert>
       )}
 
-      {/* Login Form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-5 2xl:mt-7">
+      {/* Register Form */}
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-5 2xl:mt-7 space-y-4">
+        {/* Registration Code Field */}
+        <div>
+          <Label htmlFor="code" className="mb-2 font-medium text-default-600">
+            Mã đăng ký <span className="text-destructive">*</span>
+          </Label>
+          <Input
+            disabled={isPending}
+            {...register("code")}
+            type="text"
+            id="code"
+            placeholder="ADMIN-XXXX-XXXX"
+            className={cn("", {
+              "border-destructive": errors.code || state?.errors?.code,
+            })}
+            size={!isDesktop2xl ? "xl" : "lg"}
+          />
+          {errors.code && (
+            <p className="text-destructive text-sm mt-1">{errors.code.message}</p>
+          )}
+          {state?.errors?.code && (
+            <p className="text-destructive text-sm mt-1">{state.errors.code[0]}</p>
+          )}
+          <p className="text-muted-foreground text-xs mt-1">
+            Mã đăng ký được cung cấp bởi quản trị viên hệ thống
+          </p>
+        </div>
+
         {/* Username Field */}
         <div>
-          <Label
-            htmlFor="username"
-            className="mb-2 font-medium text-default-600"
-          >
+          <Label htmlFor="username" className="mb-2 font-medium text-default-600">
             Username <span className="text-destructive">*</span>
           </Label>
           <Input
@@ -128,26 +162,17 @@ const LoginForm = () => {
             })}
             size={!isDesktop2xl ? "xl" : "lg"}
           />
-          {/* Client validation error */}
           {errors.username && (
-            <p className="text-destructive text-sm mt-1">
-              {errors.username.message}
-            </p>
+            <p className="text-destructive text-sm mt-1">{errors.username.message}</p>
           )}
-          {/* Server validation error */}
           {state?.errors?.username && (
-            <p className="text-destructive text-sm mt-1">
-              {state.errors.username[0]}
-            </p>
+            <p className="text-destructive text-sm mt-1">{state.errors.username[0]}</p>
           )}
         </div>
 
         {/* Password Field */}
-        <div className="mt-4">
-          <Label
-            htmlFor="password"
-            className="mb-2 font-medium text-default-600"
-          >
+        <div>
+          <Label htmlFor="password" className="mb-2 font-medium text-default-600">
             Mật khẩu <span className="text-destructive">*</span>
           </Label>
           <div className="relative">
@@ -158,8 +183,7 @@ const LoginForm = () => {
               id="password"
               placeholder="••••••••"
               className={cn("pr-10", {
-                "border-destructive":
-                  errors.password || state?.errors?.password,
+                "border-destructive": errors.password || state?.errors?.password,
               })}
               size={!isDesktop2xl ? "xl" : "lg"}
             />
@@ -170,26 +194,39 @@ const LoginForm = () => {
               tabIndex={-1}
             >
               <Icon
-                icon={
-                  passwordType === "password"
-                    ? "heroicons:eye"
-                    : "heroicons:eye-slash"
-                }
+                icon={passwordType === "password" ? "heroicons:eye" : "heroicons:eye-slash"}
                 className="w-5 h-5 text-default-400"
               />
             </button>
           </div>
-          {/* Client validation error */}
           {errors.password && (
-            <p className="text-destructive text-sm mt-1">
-              {errors.password.message}
-            </p>
+            <p className="text-destructive text-sm mt-1">{errors.password.message}</p>
           )}
-          {/* Server validation error */}
           {state?.errors?.password && (
-            <p className="text-destructive text-sm mt-1">
-              {state.errors.password[0]}
-            </p>
+            <p className="text-destructive text-sm mt-1">{state.errors.password[0]}</p>
+          )}
+        </div>
+
+        {/* Confirm Password Field */}
+        <div>
+          <Label htmlFor="confirmPassword" className="mb-2 font-medium text-default-600">
+            Xác nhận mật khẩu <span className="text-destructive">*</span>
+          </Label>
+          <div className="relative">
+            <Input
+              disabled={isPending}
+              {...register("confirmPassword")}
+              type={passwordType}
+              id="confirmPassword"
+              placeholder="••••••••"
+              className={cn("pr-10", {
+                "border-destructive": errors.confirmPassword,
+              })}
+              size={!isDesktop2xl ? "xl" : "lg"}
+            />
+          </div>
+          {errors.confirmPassword && (
+            <p className="text-destructive text-sm mt-1">{errors.confirmPassword.message}</p>
           )}
         </div>
 
@@ -201,19 +238,19 @@ const LoginForm = () => {
           size={!isDesktop2xl ? "lg" : "md"}
         >
           {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {isPending ? "Đang đăng nhập..." : "Đăng nhập"}
+          {isPending ? "Đang đăng ký..." : "Đăng ký"}
         </Button>
       </form>
 
-      {/* Register Link */}
+      {/* Login Link */}
       <div className="mt-6 text-center text-base text-default-600">
-        Chưa có tài khoản?{" "}
-        <Link href="/auth/register" className="text-primary hover:underline">
-          Đăng ký
+        Đã có tài khoản?{" "}
+        <Link href="/auth/login" className="text-primary hover:underline">
+          Đăng nhập
         </Link>
       </div>
     </div>
   );
 };
 
-export default LoginForm;
+export default RegisterForm;
