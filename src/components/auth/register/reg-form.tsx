@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useFormState } from "react-dom";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
@@ -14,51 +13,46 @@ import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { SiteLogo } from "@/components/svg";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { registerAction, AuthState } from "@/action/auth-action";
 
 // Schema validate: username (min 6) + password (min 6) + registration code
-const registerSchema = z.object({
-  username: z
-    .string()
-    .min(1, { message: "Username không được để trống" })
-    .min(6, { message: "Username phải có ít nhất 6 ký tự" }),
-  password: z
-    .string()
-    .min(1, { message: "Mật khẩu không được để trống" })
-    .min(6, { message: "Mật khẩu phải có ít nhất 6 ký tự" }),
-  confirmPassword: z
-    .string()
-    .min(1, { message: "Xác nhận mật khẩu không được để trống" }),
-  code: z
-    .string()
-    .min(1, { message: "Mã đăng ký không được để trống" }),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Mật khẩu xác nhận không khớp",
-  path: ["confirmPassword"],
-});
+const registerSchema = z
+  .object({
+    username: z
+      .string()
+      .min(1, { message: "Username không được để trống" })
+      .min(6, { message: "Username phải có ít nhất 6 ký tự" }),
+    password: z
+      .string()
+      .min(1, { message: "Mật khẩu không được để trống" })
+      .min(6, { message: "Mật khẩu phải có ít nhất 6 ký tự" }),
+    confirmPassword: z
+      .string()
+      .min(1, { message: "Xác nhận mật khẩu không được để trống" }),
+    code: z.string().min(1, { message: "Mã đăng ký không được để trống" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Mật khẩu xác nhận không khớp",
+    path: ["confirmPassword"],
+  });
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 const RegisterForm = () => {
   const router = useRouter();
   const [isPending, startTransition] = React.useTransition();
-  const [passwordType, setPasswordType] = React.useState<"password" | "text">("password");
-  const isDesktop2xl = useMediaQuery("(max-width: 1530px)");
-
-  // Server Action state
-  const [state, formAction] = useFormState<AuthState | null, FormData>(
-    registerAction,
-    null
+  const [passwordType, setPasswordType] = React.useState<"password" | "text">(
+    "password"
   );
+  const isDesktop2xl = useMediaQuery("(max-width: 1530px)");
 
   // React Hook Form
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -71,27 +65,43 @@ const RegisterForm = () => {
     },
   });
 
-  // Xử lý kết quả từ Server Action
-  useEffect(() => {
-    if (state?.success) {
-      toast.success(state.message);
-      router.push("/dashboard");
-    }
-  }, [state, router]);
-
   const togglePasswordType = () => {
     setPasswordType((prev) => (prev === "password" ? "text" : "password"));
   };
 
-  // Submit form qua Server Action
-  const onSubmit = (data: RegisterFormData) => {
-    const formData = new FormData();
-    formData.append("username", data.username);
-    formData.append("password", data.password);
-    formData.append("code", data.code);
+  // Submit form - Gọi API trực tiếp
+  const onSubmit = async (data: RegisterFormData) => {
+    startTransition(async () => {
+      try {
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL;
+        const res = await fetch(`${backendUrl}/api/auth/register`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: data.username,
+            password: data.password,
+            code: data.code,
+          }),
+        });
 
-    startTransition(() => {
-      formAction(formData);
+        const responseData = await res.json();
+
+        if (res.ok && responseData.success) {
+          toast.success(responseData.message || "Đăng ký thành công!");
+          reset();
+          // Chuyển đến trang login
+          router.push("/auth/login");
+        } else {
+          toast.error(
+            responseData.message || "Đăng ký thất bại! Vui lòng thử lại."
+          );
+        }
+      } catch (error: any) {
+        toast.error("Có lỗi xảy ra khi đăng ký. Vui lòng thử lại!");
+        console.error("Register error:", error.message);
+      }
     });
   };
 
@@ -110,13 +120,6 @@ const RegisterForm = () => {
         Vui lòng nhập mã đăng ký được cung cấp bởi quản trị viên.
       </div>
 
-      {/* Error Alert - Hiển thị lỗi từ API */}
-      {state && !state.success && (
-        <Alert color="destructive" variant="soft" className="mt-4">
-          <AlertDescription>{state.message}</AlertDescription>
-        </Alert>
-      )}
-
       {/* Register Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="mt-5 2xl:mt-7 space-y-4">
         {/* Registration Code Field */}
@@ -131,15 +134,12 @@ const RegisterForm = () => {
             id="code"
             placeholder="ADMIN-XXXX-XXXX"
             className={cn("", {
-              "border-destructive": errors.code || state?.errors?.code,
+              "border-destructive": errors.code,
             })}
             size={!isDesktop2xl ? "xl" : "lg"}
           />
           {errors.code && (
             <p className="text-destructive text-sm mt-1">{errors.code.message}</p>
-          )}
-          {state?.errors?.code && (
-            <p className="text-destructive text-sm mt-1">{state.errors.code[0]}</p>
           )}
           <p className="text-muted-foreground text-xs mt-1">
             Mã đăng ký được cung cấp bởi quản trị viên hệ thống
@@ -158,15 +158,14 @@ const RegisterForm = () => {
             id="username"
             placeholder="admin123"
             className={cn("", {
-              "border-destructive": errors.username || state?.errors?.username,
+              "border-destructive": errors.username,
             })}
             size={!isDesktop2xl ? "xl" : "lg"}
           />
           {errors.username && (
-            <p className="text-destructive text-sm mt-1">{errors.username.message}</p>
-          )}
-          {state?.errors?.username && (
-            <p className="text-destructive text-sm mt-1">{state.errors.username[0]}</p>
+            <p className="text-destructive text-sm mt-1">
+              {errors.username.message}
+            </p>
           )}
         </div>
 
@@ -183,7 +182,7 @@ const RegisterForm = () => {
               id="password"
               placeholder="••••••••"
               className={cn("pr-10", {
-                "border-destructive": errors.password || state?.errors?.password,
+                "border-destructive": errors.password,
               })}
               size={!isDesktop2xl ? "xl" : "lg"}
             />
@@ -194,22 +193,28 @@ const RegisterForm = () => {
               tabIndex={-1}
             >
               <Icon
-                icon={passwordType === "password" ? "heroicons:eye" : "heroicons:eye-slash"}
+                icon={
+                  passwordType === "password"
+                    ? "heroicons:eye"
+                    : "heroicons:eye-slash"
+                }
                 className="w-5 h-5 text-default-400"
               />
             </button>
           </div>
           {errors.password && (
-            <p className="text-destructive text-sm mt-1">{errors.password.message}</p>
-          )}
-          {state?.errors?.password && (
-            <p className="text-destructive text-sm mt-1">{state.errors.password[0]}</p>
+            <p className="text-destructive text-sm mt-1">
+              {errors.password.message}
+            </p>
           )}
         </div>
 
         {/* Confirm Password Field */}
         <div>
-          <Label htmlFor="confirmPassword" className="mb-2 font-medium text-default-600">
+          <Label
+            htmlFor="confirmPassword"
+            className="mb-2 font-medium text-default-600"
+          >
             Xác nhận mật khẩu <span className="text-destructive">*</span>
           </Label>
           <div className="relative">
@@ -226,7 +231,9 @@ const RegisterForm = () => {
             />
           </div>
           {errors.confirmPassword && (
-            <p className="text-destructive text-sm mt-1">{errors.confirmPassword.message}</p>
+            <p className="text-destructive text-sm mt-1">
+              {errors.confirmPassword.message}
+            </p>
           )}
         </div>
 
@@ -254,3 +261,4 @@ const RegisterForm = () => {
 };
 
 export default RegisterForm;
+

@@ -1,4 +1,4 @@
-import RegisterForm from "./reg-form";
+import RegisterForm from "@/components/auth/register/reg-form";
 
 export const metadata = {
   title: "Đăng ký | Admin Dashboard",

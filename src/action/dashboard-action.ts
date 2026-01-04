@@ -1,6 +1,7 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export interface DashboardStats {
   residents?: {
@@ -46,8 +47,8 @@ export interface DashboardResponse {
  */
 export async function getDashboardStats(): Promise<DashboardResponse> {
   try {
-    const cookieStore = cookies();
-    const token = cookieStore.get("access_token")?.value;
+    const session = await getServerSession(authOptions);
+    const token = (session?.user as any)?.accessToken;
 
     if (!token) {
       return {
@@ -95,4 +96,3 @@ export async function getDashboardStats(): Promise<DashboardResponse> {
     };
   }
 }
-
