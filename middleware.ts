@@ -20,7 +20,7 @@ export async function middleware(req: NextRequest) {
     // Check token có hợp lệ không (có id, accessToken, role)
     const isValidToken = token && (token as any).id && (token as any).accessToken && (token as any).role;
     if (isValidToken && (pathname.startsWith("/login") || pathname.startsWith("/register") || pathname === "/")) {
-      return NextResponse.redirect(new URL("/dashboard", req.url));
+       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
     // Nếu đang ở trang public và chưa login -> Cho phép truy cập, không redirect
     return NextResponse.next();

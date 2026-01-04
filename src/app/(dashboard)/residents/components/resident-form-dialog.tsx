@@ -23,6 +23,7 @@ import { Loader2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { createResident, updateResident } from "@/action/resident-action";
 import type { Resident, CreateResidentPayload, UpdateResidentPayload } from "../types";
+import type { Apartment } from "@/app/(dashboard)/apartments/types";
 
 interface ResidentFormDialogProps {
   open: boolean;
@@ -40,6 +41,8 @@ export default function ResidentFormDialog({
   const isEditing = !!resident;
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [apartments, setApartments] = useState<Apartment[]>([]);
+  const [loadingApartments, setLoadingApartments] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -48,10 +51,33 @@ export default function ResidentFormDialog({
     identityCard: "",
     hometown: "",
     job: "",
-    status: "Thường trú",
+    residencyStatus: "",
+    apartmentId: "",
   });
 
-  // Reset form when dialog opens/closes or resident changes
+  useEffect(() => {
+    const loadApartments = async () => {
+      setLoadingApartments(true);
+      try {
+        const response = await fetch("/api/user/apartments");
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data) {
+            setApartments(data.data);
+          }
+        }
+      } catch (error) {
+        console.error("Error loading apartments:", error);
+      } finally {
+        setLoadingApartments(false);
+      }
+    };
+
+    if (open) {
+      loadApartments();
+    }
+  }, [open]);
+
   useEffect(() => {
     if (open) {
       if (resident) {
@@ -62,7 +88,8 @@ export default function ResidentFormDialog({
           identityCard: resident.identityCard || "",
           hometown: resident.hometown || "",
           job: resident.job || "",
-          status: resident.status || "Thường trú",
+          residencyStatus: resident.residencyStatus || "Thường trú",
+          apartmentId: resident.apartmentId?._id || "",
         });
       } else {
         setFormData({
@@ -72,7 +99,8 @@ export default function ResidentFormDialog({
           identityCard: "",
           hometown: "",
           job: "",
-          status: "Thường trú",
+          residencyStatus: "Thường trú",
+          apartmentId: "",
         });
       }
       setErrors({});
@@ -117,7 +145,8 @@ export default function ResidentFormDialog({
           identityCard: formData.identityCard,
           hometown: formData.hometown || undefined,
           job: formData.job || undefined,
-          status: formData.status,
+          residencyStatus: formData.residencyStatus,
+          apartmentId: formData.apartmentId || undefined,
         };
         result = await updateResident(resident._id, payload);
       } else {
@@ -128,8 +157,9 @@ export default function ResidentFormDialog({
           identityCard: formData.identityCard,
           hometown: formData.hometown || undefined,
           job: formData.job || undefined,
-        };
-        result = await createResident(payload);
+          apartmentId: formData.apartmentId || undefined,
+        } as any;
+        result = await createResident(payload as CreateResidentPayload);
       }
 
       if (result.success) {
@@ -270,13 +300,35 @@ export default function ResidentFormDialog({
             />
           </div>
 
+          {/* Căn hộ */}
+          <div className="space-y-2">
+            <Label htmlFor="apartmentId">Căn hộ</Label>
+            <Select
+              value={formData.apartmentId}
+              onValueChange={(value) => handleChange("apartmentId", value)}
+              disabled={loadingApartments}
+            >
+              <SelectTrigger id="apartmentId">
+                <SelectValue placeholder={loadingApartments ? "Đang tải..." : "Chọn căn hộ"} />
+              </SelectTrigger>
+              <SelectContent position="item-aligned">
+                <SelectItem value="">Không có căn hộ</SelectItem>
+                {apartments.map((apt) => (
+                  <SelectItem key={apt._id} value={apt._id}>
+                    {apt.building} - {apt.apartmentNumber} ({apt.ownerName})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Trạng thái - chỉ hiển thị khi edit */}
           {isEditing && (
             <div className="space-y-2">
               <Label htmlFor="status">Trạng thái</Label>
               <Select
-                value={formData.status}
-                onValueChange={(value) => handleChange("status", value)}
+                value={formData.residencyStatus}
+                onValueChange={(value) => handleChange("residencyStatus", value)}
               >
                 <SelectTrigger id="status">
                   <SelectValue placeholder="Chọn trạng thái" />

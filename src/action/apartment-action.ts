@@ -10,7 +10,6 @@ import type {
   AddMemberPayload,
 } from "@/app/(dashboard)/apartments/types";
 
-// Re-export for convenience
 export type { Apartment, ApartmentListResponse, CreateApartmentPayload, AddMemberPayload };
 
 interface ActionResponse<T = any> {
@@ -50,7 +49,15 @@ export async function getApartmentsSimple(): Promise<ActionResponse<Apartment[]>
       return { success: false, message: data.message || "Không thể tải danh sách căn hộ" };
     }
 
-    return { success: true, data: data.data || [] };
+    // Transform ownerId thành ownerName
+    const apartments = (data.data || []).map((apt: any) => ({
+      ...apt,
+      ownerName: typeof apt.ownerId === 'object' && apt.ownerId?.fullName 
+        ? apt.ownerId.fullName 
+        : apt.ownerName || '',
+    }));
+
+    return { success: true, data: apartments };
   } catch (error) {
     console.error("Get apartments simple error:", error);
     return { success: false, message: "Lỗi kết nối" };
@@ -88,6 +95,15 @@ export async function getApartments(params?: {
       return { success: false, message: data.message || "Không thể tải danh sách căn hộ" };
     }
 
+    if (data.data && Array.isArray(data.data)) {
+      data.data = data.data.map((apt: any) => ({
+        ...apt,
+        ownerName: typeof apt.ownerId === 'object' && apt.ownerId?.fullName 
+          ? apt.ownerId.fullName 
+          : apt.ownerName || '',
+      }));
+    }
+
     return { success: true, data };
   } catch (error) {
     console.error("Get apartments error:", error);
@@ -120,8 +136,21 @@ export async function getApartmentById(id: string): Promise<ActionResponse<Apart
       return { success: false, message: data.message || "Không tìm thấy căn hộ" };
     }
 
+    // Transform ownerId thành ownerName
+    const apartment = data.data;
+    if (!apartment) {
+      return { success: false, message: "Không tìm thấy căn hộ" };
+    }
+
+    const transformedApartment = {
+      ...apartment,
+      ownerName: typeof apartment.ownerId === 'object' && apartment.ownerId?.fullName 
+        ? apartment.ownerId.fullName 
+        : apartment.ownerName || '',
+    };
+
     // Backend trả về { success: true, data: apartment }
-    return { success: true, data: data.data };
+    return { success: true, data: transformedApartment };
   } catch (error) {
     console.error("Get apartment detail error:", error);
     return { success: false, message: "Lỗi kết nối" };

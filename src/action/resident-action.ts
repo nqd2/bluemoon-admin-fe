@@ -60,12 +60,6 @@ export async function getResidents(params?: {
 
     const data = await response.json();
 
-    console.log("\n--- Debug getResidents ---");
-    console.log("URL:", url);
-    console.log("Token exists:", !!token);
-    console.log("Response Status:", response.status);
-    // console.log("Response Data Preview:", JSON.stringify(data).substring(0, 200));
-    
     if (!response.ok) {
       console.error("Fetch failed:", data);
       return {
@@ -79,7 +73,7 @@ export async function getResidents(params?: {
       data: data,
     };
   } catch (error) {
-    console.error("❌ Get residents error:", error);
+    console.error("Get residents error:", error);
     return {
       success: false,
       message: "Lỗi kết nối, vui lòng thử lại sau",

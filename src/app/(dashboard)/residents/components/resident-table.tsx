@@ -11,20 +11,12 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Pencil, Trash2, Loader2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import DeleteConfirmationDialog from "@/components/delete-confirmation-dialog";
 import ResidentFormDialog from "./resident-form-dialog";
-import { deleteResident, updateResident } from "@/action/resident-action";
+import { deleteResident } from "@/action/resident-action";
 import type { Resident } from "../types";
-import type { Apartment } from "@/app/(dashboard)/apartments/types";
 
 interface ResidentTableProps {
   residents: Resident[];
@@ -36,30 +28,6 @@ export default function ResidentTable({ residents, onRefresh }: ResidentTablePro
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [deletingResidentId, setDeletingResidentId] = useState<string | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [apartments, setApartments] = useState<Apartment[]>([]);
-  const [loadingApartments, setLoadingApartments] = useState(false);
-  const [updatingResidentId, setUpdatingResidentId] = useState<string | null>(null);
-
-  // Load apartments khi component mount
-  useEffect(() => {
-    const loadApartments = async () => {
-      setLoadingApartments(true);
-      try {
-        const response = await fetch("/api/user/apartments");
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success && data.data) {
-            setApartments(data.data);
-          }
-        }
-      } catch (error) {
-        console.error("Error loading apartments:", error);
-      } finally {
-        setLoadingApartments(false);
-      }
-    };
-    loadApartments();
-  }, []);
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "-";
@@ -72,16 +40,23 @@ export default function ResidentTable({ residents, onRefresh }: ResidentTablePro
   };
 
   const getStatusBadge = (status?: string) => {
-    switch (status) {
-      case "Thường trú":
-        return <Badge color="success">{status}</Badge>;
-      case "Tạm trú":
-        return <Badge color="warning">{status}</Badge>;
-      case "Tạm vắng":
-        return <Badge color="secondary">{status}</Badge>;
-      default:
-        return <Badge color="default">{status || "Chưa xác định"}</Badge>;
+    if (!status) {
+      return <Badge color="default">Chưa xác định</Badge>;
     }
+
+    const normalizedStatus = status.trim();
+    
+    if (normalizedStatus === "Thường trú") {
+      return <Badge color="success">Thường trú</Badge>;
+    }
+    if (normalizedStatus === "Tạm trú") {
+      return <Badge color="warning">Tạm trú</Badge>;
+    }
+    if (normalizedStatus === "Tạm vắng") {
+      return <Badge color="secondary">Tạm vắng</Badge>;
+    }
+    
+    return <Badge color="default">{normalizedStatus}</Badge>;
   };
 
   const getGenderBadge = (gender?: string) => {
@@ -127,26 +102,6 @@ export default function ResidentTable({ residents, onRefresh }: ResidentTablePro
     onRefresh?.();
   };
 
-  const handleApartmentChange = async (residentId: string, apartmentId: string) => {
-    setUpdatingResidentId(residentId);
-    try {
-      const result = await updateResident(residentId, {
-        apartmentId: apartmentId || undefined,
-      });
-      
-      if (result.success) {
-        toast.success("Cập nhật căn hộ thành công");
-        onRefresh?.();
-      } else {
-        toast.error(result.message || "Không thể cập nhật căn hộ");
-      }
-    } catch (error) {
-      toast.error("Có lỗi xảy ra");
-    } finally {
-      setUpdatingResidentId(null);
-    }
-  };
-
   if (residents.length === 0) {
     return (
       <div className="text-center py-12 text-default-500">
@@ -162,10 +117,10 @@ export default function ResidentTable({ residents, onRefresh }: ResidentTablePro
         <TableHeader>
           <TableRow className="bg-default-100">
             <TableHead>Họ tên</TableHead>
-            <TableHead>CCCD/CMND</TableHead>
+            {/* <TableHead>CCCD/CMND</TableHead> */}
             <TableHead>Giới tính</TableHead>
             <TableHead>Ngày sinh</TableHead>
-            <TableHead>Nghề nghiệp</TableHead>
+            {/* <TableHead>Nghề nghiệp</TableHead> */}
             <TableHead>Căn hộ</TableHead>
             <TableHead>Vai trò</TableHead>
             <TableHead>Trạng thái</TableHead>
@@ -176,35 +131,17 @@ export default function ResidentTable({ residents, onRefresh }: ResidentTablePro
           {residents.map((resident) => (
             <TableRow key={resident._id}>
               <TableCell className="font-medium">{resident.fullName}</TableCell>
-              <TableCell>{resident.identityCard}</TableCell>
+              {/* <TableCell>{resident.identityCard}</TableCell> */}
               <TableCell>{getGenderBadge(resident.gender)}</TableCell>
               <TableCell>{formatDate(resident.dob)}</TableCell>
-              <TableCell>{resident.job || "-"}</TableCell>
+              {/* <TableCell>{resident.job || "-"}</TableCell> */}
               <TableCell>
-                {updatingResidentId === resident._id ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Select
-                    value={resident.apartmentId?._id || ""}
-                    onValueChange={(value) => handleApartmentChange(resident._id, value)}
-                    disabled={updatingResidentId !== null}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Chọn căn hộ" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="">Không có căn hộ</SelectItem>
-                      {apartments.map((apt) => (
-                        <SelectItem key={apt._id} value={apt._id}>
-                          {apt.building} - {apt.apartmentNumber} ({apt.name})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
+                {resident.apartmentId 
+                  ? `${resident.apartmentId.building} - ${resident.apartmentId.apartmentNumber}`
+                  : "-"}
               </TableCell>
               <TableCell>{resident.roleInApartment || "-"}</TableCell>
-              <TableCell>{getStatusBadge(resident.status)}</TableCell>
+              <TableCell>{getStatusBadge(resident.residencyStatus)}</TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
                   <Button

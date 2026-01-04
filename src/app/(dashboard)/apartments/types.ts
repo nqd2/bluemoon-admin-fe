@@ -1,14 +1,12 @@
 import { Resident } from "../residents/types";
 
-export interface ApartmentMember {
-  resident: Resident | string; // Có thể là object populated hoặc ID string
-  role: "Chủ hộ" | "Thành viên";
-  _id?: string;
+export interface ApartmentMember extends Resident {
 }
 
 export interface Apartment {
   _id: string;
-  name: string;
+  ownerName?: string;
+  ownerId?: string;
   apartmentNumber: string;
   building: string;
   area: number;
@@ -19,7 +17,7 @@ export interface Apartment {
 }
 
 export interface CreateApartmentPayload {
-  name: string;
+  ownerId: string;
   apartmentNumber: string;
   building: string;
   area: number;

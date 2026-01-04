@@ -14,6 +14,8 @@ import { Eye } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import type { Apartment } from "../types";
+import type { Resident } from "@/app/(dashboard)/residents/types";
+import { getResidentById } from "@/action/resident-action";
 
 interface ApartmentTableProps {
   apartments: Apartment[];
@@ -48,8 +50,8 @@ export default function ApartmentTable({ apartments }: ApartmentTableProps) {
             <TableCell>
               <Badge variant="soft">{apt.building}</Badge>
             </TableCell>
-            <TableCell>{apt.name}</TableCell>
-            <TableCell>{apt.area}</TableCell>
+            <TableCell>{apt.ownerName || "-"}</TableCell> 
+            <TableCell>{apt.area.toFixed(2)} m²</TableCell>
             <TableCell>{apt.members?.length || 0}</TableCell>
             <TableCell className="text-right">
               <Button asChild variant="ghost" size="icon">

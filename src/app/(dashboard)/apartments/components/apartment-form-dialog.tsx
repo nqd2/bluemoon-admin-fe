@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { createApartment } from "@/action/apartment-action";
+import { ResidentSelect } from "./resident-select";
 
 interface ApartmentFormDialogProps {
   open: boolean;
@@ -31,6 +32,7 @@ export default function ApartmentFormDialog({
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [formData, setFormData] = useState({
+    ownerId: "",
     name: "",
     apartmentNumber: "",
     building: "",
@@ -41,6 +43,7 @@ export default function ApartmentFormDialog({
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
+    if (!formData.ownerId) newErrors.ownerId = "Chủ hộ là bắt buộc";
     if (!formData.name.trim()) newErrors.name = "Tên hộ là bắt buộc";
     if (!formData.apartmentNumber.trim()) newErrors.apartmentNumber = "Số phòng là bắt buộc";
     if (!formData.building.trim()) newErrors.building = "Tòa nhà là bắt buộc";
@@ -61,7 +64,7 @@ export default function ApartmentFormDialog({
     setIsLoading(true);
     try {
       const result = await createApartment({
-        name: formData.name,
+        ownerId: formData.ownerId,
         apartmentNumber: formData.apartmentNumber,
         building: formData.building,
         area: Number(formData.area),
@@ -70,7 +73,7 @@ export default function ApartmentFormDialog({
 
       if (result.success) {
         toast.success(result.message || "Tạo căn hộ thành công");
-        setFormData({ name: "", apartmentNumber: "", building: "", area: "", description: "" });
+        setFormData({ ownerId: "", name: "", apartmentNumber: "", building: "", area: "", description: "" });
         onOpenChange(false);
         onSuccess?.();
       } else {
@@ -96,16 +99,20 @@ export default function ApartmentFormDialog({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Tên chủ hộ / Tên hộ <span className="text-destructive">*</span></Label>
-            <Input
-              id="name"
-              placeholder="Ví dụ: Gia đình ông Nguyễn Văn A"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              color={errors.name ? "destructive" : undefined}
+            <Label>Chủ hộ <span className="text-destructive">*</span></Label>
+            <ResidentSelect
+              value={formData.ownerId}
+              onChange={(val) => {
+                setFormData({ ...formData, ownerId: val });
+                if (errors.ownerId) {
+                  setErrors({ ...errors, ownerId: "" });
+                }
+              }}
+              error={!!errors.ownerId}
             />
-            {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
+            {errors.ownerId && <p className="text-sm text-destructive">{errors.ownerId}</p>}
           </div>
+
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
