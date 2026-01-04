@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import { useSidebar, useThemeStore } from "@/store";
-import { cn } from "@/lib/utils";
+import { useSidebar } from "@/store";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import ModuleSidebar from "./module";
 import PopoverSidebar from "./popover";
@@ -9,8 +8,7 @@ import ClassicSidebar from "./classic";
 import MobileSidebar from "./mobile-sidebar";
 
 const Sidebar = ({ trans }: { trans: string }) => {
-  const { sidebarType, collapsed } = useSidebar();
-  const { layout } = useThemeStore();
+  const { sidebarType } = useSidebar();
 
   const isDesktop = useMediaQuery("(min-width: 1280px)");
 

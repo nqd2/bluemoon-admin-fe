@@ -8,15 +8,16 @@ import MenuLabel from "../common/menu-label";
 import SingleMenuItem from "./single-menu-item";
 import SubMenuHandler from "./sub-menu-handler";
 import NestedSubMenu from "../common/nested-menus";
-import { useSidebar, useThemeStore } from "@/store";
+import { useSidebar } from "@/store";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { usePathname } from "next/navigation";
 import AddBlock from "../common/add-block";
+import { siteConfig } from "@/config/site";
 
 const PopoverSidebar = ({ trans }: { trans: string }) => {
   const { collapsed, sidebarBg } = useSidebar();
-  const { layout, isRtl } = useThemeStore();
+  const layout = siteConfig.layout;
   const menus = menusConfig?.sidebarNav?.classic || [];
   const [activeSubmenu, setActiveSubmenu] = useState<number | null>(null);
   const [activeMultiMenu, setMultiMenu] = useState<number | null>(null);
@@ -64,8 +65,6 @@ const PopoverSidebar = ({ trans }: { trans: string }) => {
     setMultiMenu(multiMenuIndex);
   }, [locationName]);
 
-  // menu title
-
   return (
     <div
       className={cn("fixed  top-0  border-r  ", {
@@ -89,7 +88,6 @@ const PopoverSidebar = ({ trans }: { trans: string }) => {
         })}
       >
         <ul
-          dir={isRtl ? "rtl" : "ltr"}
           className={cn(" space-y-1", {
             " space-y-2 text-center": collapsed,
           })}
@@ -130,7 +128,6 @@ const PopoverSidebar = ({ trans }: { trans: string }) => {
                       activeSubmenu={activeSubmenu}
                       item={item}
                       index={i}
-
                       trans={trans}
                     />
                   )}

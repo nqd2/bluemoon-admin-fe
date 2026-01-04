@@ -1,24 +1,22 @@
 "use client";
 import React, { useState } from "react";
 import { cn, isLocationMatch, getDynamicPath } from "@/lib/utils";
-import { useSidebar, useThemeStore } from "@/store";
+import { useSidebar } from "@/store";
 import SidebarLogo from "../common/logo";
 import { menusConfig } from "@/config/menus";
 import MenuLabel from "../common/menu-label";
-import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { usePathname } from "next/navigation";
 import SingleMenuItem from "./single-menu-item";
 import SubMenuHandler from "./sub-menu-handler";
 import NestedSubMenu from "../common/nested-menus";
 import AddBlock from "../common/add-block";
+
 const ClassicSidebar = ({ trans }: { trans: string }) => {
-  const { sidebarBg } = useSidebar();
+  const { sidebarBg, collapsed, setCollapsed } = useSidebar();
   const [activeSubmenu, setActiveSubmenu] = useState<number | null>(null);
   const [activeMultiMenu, setMultiMenu] = useState<number | null>(null);
   const menus = menusConfig?.sidebarNav?.classic || [];
-  const { collapsed, setCollapsed } = useSidebar();
-  const { isRtl } = useThemeStore();
   const [hovered, setHovered] = useState<boolean>(false);
 
   const toggleSubmenu = (i: number) => {
@@ -92,7 +90,6 @@ const ClassicSidebar = ({ trans }: { trans: string }) => {
         })}
       >
         <ul
-          dir={isRtl ? "rtl" : "ltr"}
           className={cn(" space-y-1", {
             " space-y-2 text-center": collapsed,
             "text-start": collapsed && hovered,
@@ -136,8 +133,6 @@ const ClassicSidebar = ({ trans }: { trans: string }) => {
                       activeSubmenu={activeSubmenu}
                       item={item}
                       index={i}
-
-
                       trans={trans}
                     />
                   )}

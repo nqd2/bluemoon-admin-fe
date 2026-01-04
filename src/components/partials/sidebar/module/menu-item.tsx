@@ -2,8 +2,7 @@ import React from "react";
 import { cn, isLocationMatch, translate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { ChevronRight, ChevronLeft } from "lucide-react";
-import { useThemeStore } from "@/store";
+import { ChevronRight } from "lucide-react";
 
 function NavLink({ childItem, locationName, trans }: {
   childItem: any;
@@ -52,7 +51,6 @@ const MenuItem = ({
   trans: any;
 }) => {
   const { icon, title } = childItem;
-  const { isRtl } = useThemeStore();
   return (
     <div>
       {childItem?.nested ? (
@@ -85,11 +83,7 @@ const MenuItem = ({
                 }
               )}
             >
-              {isRtl ? (
-                <ChevronLeft className="w-3.5 h-3.5 " />
-              ) : (
-                <ChevronRight className="w-3.5 h-3.5 " />
-              )}
+              <ChevronRight className="w-3.5 h-3.5 " />
             </div>
           )}
         </div>
