@@ -3,6 +3,7 @@ import { getDictionary } from "@/app/dictionaries";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import ResidentsPrefetch from "./components/residents-prefetch";
 import { cookies } from "next/headers";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
@@ -40,7 +41,10 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   const trans = await getDictionary();
 
   return (
-    <DashBoardLayoutProvider trans={trans}>{children}</DashBoardLayoutProvider>
+    <DashBoardLayoutProvider trans={trans}>
+      <ResidentsPrefetch />
+      {children}
+    </DashBoardLayoutProvider>
   );
 };
 
