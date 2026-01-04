@@ -58,21 +58,14 @@ const LoginForm = () => {
     setPasswordType((prev) => (prev === "password" ? "text" : "password"));
   };
 
-  // Submit form qua NextAuth signIn
   const onSubmit = (data: LoginFormData) => {
-    console.log("[Login Form] Form submitted with data:", { username: data.username, hasPassword: !!data.password });
-    
     startTransition(async () => {
       try {
-        console.log("[Login Form] Calling signIn with provider: Credentials");
-        
         const result = await signIn("Credentials", {
           username: data.username,
           password: data.password,
           redirect: false,
         });
-
-        console.log("[Login Form] signIn result:", { ok: result?.ok, error: result?.error, status: result?.status });
 
         if (result?.error) {
           console.error("[Login Form] Login error:", result.error);
@@ -82,19 +75,13 @@ const LoginForm = () => {
               : result.error
           );
         } else if (result?.ok) {
-          console.log("[Login Form] Login successful, redirecting...");
           toast.success("Đăng nhập thành công! Đang chuyển hướng...");
           
-          // Đợi một chút để session được tạo xong trước khi redirect
           await new Promise(resolve => setTimeout(resolve, 100));
           
-          // Sử dụng window.location để force reload và đảm bảo session được load
           const params = new URLSearchParams(window.location.search);
           const callbackUrl = params.get("callbackUrl") || "/dashboard";
-          console.log("[Login Form] Redirecting to:", callbackUrl);
           window.location.href = callbackUrl;
-        } else {
-          console.warn("[Login Form] Unexpected result:", result);
         }
       } catch (error) {
         console.error("[Login Form] Login Error:", error);

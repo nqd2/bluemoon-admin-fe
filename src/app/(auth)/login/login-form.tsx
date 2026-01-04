@@ -8,8 +8,6 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
-
-// UI Components
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -23,10 +21,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-// 1. Define Schema với Username
 const formSchema = z.object({
-  username: z.string().min(1, { message: "Tên đăng nhập là bắt buộc." }),
-  password: z.string().min(1, { message: "Mật khẩu là bắt buộc." }),
+  username: z
+    .string()
+    .min(1, { message: "Tên đăng nhập là bắt buộc." })
+    .min(6, { message: "Tên đăng nhập phải có ít nhất 6 ký tự." }),
+  password: z
+    .string()
+    .min(1, { message: "Mật khẩu là bắt buộc." })
+    .min(6, { message: "Mật khẩu phải có ít nhất 6 ký tự." }),
 });
 
 const LoginForm = () => {
@@ -35,7 +38,6 @@ const LoginForm = () => {
   const [isPending, startTransition] = React.useTransition();
   const [passwordType, setPasswordType] = useState("password");
 
-  // Toggle ẩn/hiện mật khẩu
   const togglePasswordType = () => {
     setPasswordType(prev => prev === "text" ? "password" : "text");
   };
@@ -48,12 +50,11 @@ const LoginForm = () => {
     },
   });
 
-  // 2. Xử lý Submit
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     startTransition(async () => {
       try {
         const result = await signIn("credentials", {
-          username: data.username, // Gửi username thay vì email
+          username: data.username,
           password: data.password,
           redirect: false,
         });
@@ -61,7 +62,7 @@ const LoginForm = () => {
         if (result?.error) {
           toast({
             title: "Đăng nhập thất bại",
-            description: "Sai tên đăng nhập hoặc mật khẩu.",
+            description: "Sai thông tin đăng nhập",
             variant: "destructive",
           });
         } else if (result?.ok) {
@@ -71,11 +72,14 @@ const LoginForm = () => {
           });
           router.push("/dashboard");
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Login Error:", error);
+        const isNetworkError = error?.message?.includes("fetch") || error?.code === "ECONNREFUSED";
         toast({
           title: "Lỗi",
-          description: "Đã xảy ra lỗi không mong muốn.",
+          description: isNetworkError 
+            ? "Lỗi hệ thống, vui lòng thử lại"
+            : "Lỗi hệ thống, vui lòng thử lại",
           variant: "destructive",
         });
       }
@@ -90,13 +94,12 @@ const LoginForm = () => {
         </h1>
       </div>
 
-      <div className="text-2xl text-center text-base text-default-600 mb-6">
+      <div className="text-center text-base text-default-600 mb-6">
         Nhập thông tin tài khoản bạn được cấp.
       </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          {/* Username Field */}
           <FormField
             control={form.control}
             name="username"
@@ -118,7 +121,6 @@ const LoginForm = () => {
             )}
           />
 
-          {/* Password Field */}
           <FormField
             control={form.control}
             name="password"
@@ -134,7 +136,7 @@ const LoginForm = () => {
                       placeholder="Nhập mật khẩu..."
                       disabled={isPending}
                       size="lg"
-                      className="pr-10" // Padding right để tránh icon
+                      className="pr-10"
                       {...field}
                     />
                     <div

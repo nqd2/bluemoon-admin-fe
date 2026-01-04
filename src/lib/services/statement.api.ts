@@ -29,11 +29,6 @@ export const getStatementHistory = async (
     const page = Array.isArray(searchParams.page) ? searchParams.page[0] : searchParams.page;
     const limit = Array.isArray(searchParams.limit) ? searchParams.limit[0] : searchParams.limit;
     
-    console.log('[Statement API] Calling backend:', BACKEND_URL);
-    console.log('[Statement API] Params:', { page: page || '1', limit: limit || '10' });
-    console.log('[Statement API] Token:', token ? '✓ Có token' : '✗ Không có token');
-    
-    // Gọi API với query params và Bearer Token
     const response = await backendApi.get('/api/statements/history', {
       params: {
         page: page || '1',
@@ -43,8 +38,6 @@ export const getStatementHistory = async (
         'Authorization': `Bearer ${token}`,
       } : {},
     });
-    
-    console.log('[Statement API] Response received:', response.status);
     
     // API của bạn đã trả về đúng cấu trúc PaginatedBankLogResponse
     return response.data; 
