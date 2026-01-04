@@ -8,6 +8,12 @@ export interface Resident {
   hometown?: string;
   job?: string;
   status?: "Thường trú" | "Tạm trú" | "Tạm vắng";
+  roleInApartment?: string;
+  apartmentId?: {
+    _id: string;
+    apartmentNumber: string;
+    building: string;
+  };
   createdAt?: string;
   updatedAt?: string;
 }
@@ -29,15 +35,10 @@ export interface UpdateResidentPayload extends Partial<CreateResidentPayload> {
 
 // Response từ API list residents
 export interface ResidentListResponse {
-  success: boolean;
-  data: Resident[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
-  message?: string;
+  residents: Resident[];
+  page: number;
+  pages: number;
+  total: number;
 }
 
 // Response từ API single resident

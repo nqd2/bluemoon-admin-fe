@@ -114,6 +114,8 @@ export default function ResidentTable({ residents, onRefresh }: ResidentTablePro
             <TableHead>Giới tính</TableHead>
             <TableHead>Ngày sinh</TableHead>
             <TableHead>Nghề nghiệp</TableHead>
+            <TableHead>Căn hộ</TableHead>
+            <TableHead>Vai trò</TableHead>
             <TableHead>Trạng thái</TableHead>
             <TableHead className="text-right">Hành động</TableHead>
           </TableRow>
@@ -126,6 +128,16 @@ export default function ResidentTable({ residents, onRefresh }: ResidentTablePro
               <TableCell>{getGenderBadge(resident.gender)}</TableCell>
               <TableCell>{formatDate(resident.dob)}</TableCell>
               <TableCell>{resident.job || "-"}</TableCell>
+              <TableCell>
+                {resident.apartmentId ? (
+                  <Badge variant="outline">
+                    {resident.apartmentId.building} - {resident.apartmentId.apartmentNumber}
+                  </Badge>
+                ) : (
+                  "-"
+                )}
+              </TableCell>
+              <TableCell>{resident.roleInApartment || "-"}</TableCell>
               <TableCell>{getStatusBadge(resident.status)}</TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">

@@ -29,12 +29,12 @@ export default function ResidentPageView({
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState(searchKeyword);
 
-  const residents = initialData?.data || [];
-  const pagination = initialData?.pagination || {
-    page: 1,
+  const residents = initialData?.residents || [];
+  const pagination = {
+    page: initialData?.page || 1,
     limit: 10,
-    total: 0,
-    totalPages: 1,
+    total: initialData?.total || 0,
+    totalPages: initialData?.pages || 1,
   };
 
   // Update search term when URL changes
