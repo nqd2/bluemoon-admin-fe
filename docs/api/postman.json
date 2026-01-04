@@ -1,0 +1,671 @@
+{
+  "info": {
+    "name": "BlueMoon Admin API",
+    "description": "API Collection for BlueMoon Apartment Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.2.1"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": ["{{baseUrl}}"],
+          "path": [""]
+        },
+        "description": "Check if API is running"
+      },
+      "response": []
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "    console.log('Token saved:', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"rootadmin\",\n  \"password\": \"rootadmin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Admin login - returns JWT token"
+          },
+          "response": []
+        },
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "    console.log('Token saved:', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"newadmin\",\n  \"password\": \"password123\",\n  \"code\": \"ADMIN-INIT-2025\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Register new user with code"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Registration Codes",
+      "item": [
+        {
+          "name": "Create Code",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"admin\",\n  \"usageLimit\": 5,\n  \"expiresIntermsOfHours\": 48\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/registration-codes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "registration-codes"]
+            },
+            "description": "Create a new registration code (Admin only)"
+          },
+          "response": []
+        },
+        {
+          "name": "List Codes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/registration-codes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "registration-codes"]
+            },
+            "description": "List all registration codes"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Code",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/registration-codes/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "registration-codes", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "CODE_ID_HERE",
+                  "description": "Code ID"
+                }
+              ]
+            },
+            "description": "Revoke a registration code"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Residents",
+      "item": [
+        {
+          "name": "Create Resident",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Nguyen Van A\",\n  \"dob\": \"1990-01-01\",\n  \"gender\": \"Nam\",\n  \"identityCard\": \"001090000001\",\n  \"hometown\": \"Ha Noi\",\n  \"job\": \"Ky su\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/residents",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "residents"]
+            },
+            "description": "Create a new resident"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Residents List",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/residents?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "residents"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page"
+                },
+                {
+                  "key": "keyword",
+                  "value": "",
+                  "description": "Search keyword (fullName or identityCard)",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get paginated list of residents with optional search"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Resident",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Nguyen Van A Updated\",\n  \"job\": \"Giam doc\",\n  \"status\": \"Tạm trú\",\n  \"apartmentId\": \"APARTMENT_ID_HERE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/residents/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "residents", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "RESIDENT_ID_HERE",
+                  "description": "Resident MongoDB ObjectId"
+                }
+              ]
+            },
+            "description": "Update resident information (partial update)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Resident",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/residents/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "residents", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "RESIDENT_ID_HERE",
+                  "description": "Resident MongoDB ObjectId"
+                }
+              ]
+            },
+            "description": "Delete a resident (hard delete)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Apartments",
+      "item": [
+        {
+          "name": "Create Apartment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"P101\",\n  \"area\": 80.5,\n  \"apartmentNumber\": \"101\",\n  \"building\": \"A\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/apartments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apartments"]
+            },
+            "description": "Create a new apartment"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Apartments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/apartments?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apartments"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page"
+                },
+                {
+                  "key": "building",
+                  "value": "",
+                  "description": "Optional: Filter by building code",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get paginated list of all apartments"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Apartment Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/apartments/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apartments", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "APARTMENT_ID_HERE",
+                  "description": "Apartment MongoDB ObjectId"
+                }
+              ]
+            },
+            "description": "Get detailed info including owner and members"
+          },
+          "response": []
+        },
+        {
+          "name": "Add Member to Apartment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"residentId\": \"RESIDENT_ID_HERE\",\n  \"role\": \"Thành viên\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/apartments/:id/members",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apartments", ":id", "members"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "APARTMENT_ID_HERE",
+                  "description": "Apartment MongoDB ObjectId"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Fees",
+      "item": [
+        {
+          "name": "Create Fee",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Phí dịch vụ tháng 12/2025\",\n  \"description\": \"Thu phí dịch vụ chung cư...\",\n  \"type\": \"Service\",\n  \"amount\": 5000,\n  \"unit\": \"m2\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/fees",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "fees"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Fees List",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/fees?type=Service",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "fees"],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "Service",
+                  "description": "Optional: Service or Contribution"
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Limit results"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Fee Payment Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/fees/:id/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "fees", ":id", "status"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "FEE_ID_HERE",
+                  "description": "Fee ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "Calculate Fee",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"apartmentId\": \"APARTMENT_ID_HERE\",\n  \"feeId\": \"FEE_ID_HERE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/transactions/calculate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transactions", "calculate"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Record Payment (Create Transaction)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"apartmentId\": \"APARTMENT_ID_HERE\",\n  \"feeId\": \"FEE_ID_HERE\",\n  \"totalAmount\": 500000,\n  \"payerName\": \"Nguyen Van A\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/transactions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transactions"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page"
+                }
+              ]
+            },
+            "description": "Get all users (Admin only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"newuser\",\n  \"password\": \"password123\",\n  \"role\": \"leader\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users"]
+            },
+            "description": "Create a new user directly (Admin only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Role",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"accountant\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "USER_ID_HERE",
+                  "description": "User ID"
+                }
+              ]
+            },
+            "description": "Update user role (Admin only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "USER_ID_HERE",
+                  "description": "User ID"
+                }
+              ]
+            },
+            "description": "Delete a user (Admin only)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Stats",
+      "item": [
+        {
+          "name": "Get Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/stats/dashboard",
+              "host": ["{{baseUrl}}"]
+            },
+            "description": "Get dashboard stats including residents, apartment status, revenue, and transaction history"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ]
+}

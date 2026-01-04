@@ -58,7 +58,6 @@ const LoginForm = () => {
     setPasswordType((prev) => (prev === "password" ? "text" : "password"));
   };
 
-  // Submit form qua NextAuth signIn
   const onSubmit = (data: LoginFormData) => {
     startTransition(async () => {
       try {
@@ -69,6 +68,7 @@ const LoginForm = () => {
       });
 
         if (result?.error) {
+          console.error("[Login Form] Login error:", result.error);
           toast.error(
             result.error === "CredentialsSignin"
               ? "Username hoặc mật khẩu không đúng"
@@ -76,10 +76,15 @@ const LoginForm = () => {
           );
         } else if (result?.ok) {
           toast.success("Đăng nhập thành công! Đang chuyển hướng...");
-          router.push("/dashboard");
+          
+          await new Promise(resolve => setTimeout(resolve, 100));
+          
+          const params = new URLSearchParams(window.location.search);
+          const callbackUrl = params.get("callbackUrl") || "/dashboard";
+          window.location.href = callbackUrl;
         }
       } catch (error) {
-        console.error("Login Error:", error);
+        console.error("[Login Form] Login Error:", error);
         toast.error("Đã xảy ra lỗi không mong muốn.");
       }
     });

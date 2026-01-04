@@ -24,7 +24,7 @@ export async function POST(request: NextRequest, response: any) {
       data: reqBody,
     });
   } catch (e) {
-    console.log("An error occurred:", e);
+    console.error("An error occurred:", e);
     return NextResponse.json({
       status: "fail",
       message: "Something went wrong",

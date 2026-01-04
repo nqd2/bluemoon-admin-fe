@@ -29,8 +29,9 @@ export async function getDashboardStats(): Promise<DashboardResponse> {
       };
     }
 
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
     const response = await fetch(
-      `${process.env.BACKEND_URL}/api/stats/dashboard`,
+      `${backendUrl}/api/stats/dashboard`,
       {
         method: "GET",
         headers: {

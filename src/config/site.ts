@@ -2,7 +2,7 @@
 
 
 export const siteConfig = {
-  name: "BlueMoon Next js Admin Template",
+  name: "Quản trị BlueMoon",
   description: null,
   theme: "blue",
   layout: "semibox",

@@ -3,26 +3,30 @@ import React from "react";
 import Header from "@/components/partials/header";
 import Sidebar from "@/components/partials/sidebar";
 import { cn } from "@/lib/utils";
-import { useSidebar, useThemeStore } from "@/store";
-import { motion, AnimatePresence } from "framer-motion";
-import { useRouter, usePathname } from "next/navigation";
+import { useSidebar } from "@/store";
+import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 import Footer from "@/components/partials/footer";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { siteConfig } from "@/config/site";
 
 import MobileSidebar from "@/components/partials/sidebar/mobile-sidebar";
 import HeaderSearch from "@/components/header-search";
 import { useMounted } from "@/hooks/use-mounted";
 import LayoutLoader from "@/components/layout-loader";
+
 const DashBoardLayoutProvider = ({ children, trans }: { children: React.ReactNode, trans: any }) => {
-  const { collapsed, sidebarType, setCollapsed, subMenu } = useSidebar();
+  const { collapsed, sidebarType } = useSidebar();
   const [open, setOpen] = React.useState(false);
-  const { layout } = useThemeStore();
+  const layout = siteConfig.layout;
   const location = usePathname();
   const isMobile = useMediaQuery("(min-width: 768px)");
   const mounted = useMounted();
+  
   if (!mounted) {
     return <LayoutLoader />;
   }
+  
   if (layout === "semibox") {
     return (
       <>
@@ -35,12 +39,7 @@ const DashBoardLayoutProvider = ({ children, trans }: { children: React.ReactNod
             "ltr:xl:ml-[272px] rtl:xl:mr-[272px]": !collapsed,
           })}
         >
-          <div
-            className={cn(
-              "pt-6 pb-8 px-4  page-min-height-semibox ",
-
-            )}
-          >
+          <div className={cn("pt-6 pb-8 px-4  page-min-height-semibox ")}>
             <div className="semibox-content-wrapper ">
               <LayoutWrapper
                 isMobile={isMobile}
@@ -55,22 +54,17 @@ const DashBoardLayoutProvider = ({ children, trans }: { children: React.ReactNod
           </div>
         </div>
         <Footer handleOpenSearch={() => setOpen(true)} />
-
       </>
     );
   }
+  
   if (layout === "horizontal") {
     return (
       <>
         <Header handleOpenSearch={() => setOpen(true)} trans={trans} />
 
         <div className={cn("content-wrapper transition-all duration-150 ")}>
-          <div
-            className={cn(
-              "  pt-6 px-6 pb-8  page-min-height-horizontal ",
-              {}
-            )}
-          >
+          <div className={cn("  pt-6 px-6 pb-8  page-min-height-horizontal ")}>
             <LayoutWrapper
               isMobile={isMobile}
               setOpen={setOpen}
@@ -83,7 +77,6 @@ const DashBoardLayoutProvider = ({ children, trans }: { children: React.ReactNod
           </div>
         </div>
         <Footer handleOpenSearch={() => setOpen(true)} />
-
       </>
     );
   }
@@ -100,12 +93,7 @@ const DashBoardLayoutProvider = ({ children, trans }: { children: React.ReactNod
             "ltr:xl:ml-[72px] rtl:xl:mr-[72px]": collapsed,
           })}
         >
-          <div
-            className={cn(
-              "  pt-6 px-6 pb-8  page-min-height ",
-              {}
-            )}
-          >
+          <div className={cn("  pt-6 px-6 pb-8  page-min-height ")}>
             <LayoutWrapper
               isMobile={isMobile}
               setOpen={setOpen}
@@ -118,10 +106,10 @@ const DashBoardLayoutProvider = ({ children, trans }: { children: React.ReactNod
           </div>
         </div>
         <Footer handleOpenSearch={() => setOpen(true)} />
-
       </>
     );
   }
+  
   return (
     <>
       <Header handleOpenSearch={() => setOpen(true)} trans={trans} />
@@ -133,12 +121,7 @@ const DashBoardLayoutProvider = ({ children, trans }: { children: React.ReactNod
           "ltr:xl:ml-[72px] rtl:xl:mr-[72px]": collapsed,
         })}
       >
-        <div
-          className={cn(
-            " layout-padding px-6 pt-6  page-min-height ",
-
-          )}
-        >
+        <div className={cn(" layout-padding px-6 pt-6  page-min-height ")}>
           <LayoutWrapper
             isMobile={isMobile}
             setOpen={setOpen}

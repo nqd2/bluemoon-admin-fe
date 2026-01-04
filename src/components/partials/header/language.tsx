@@ -11,7 +11,6 @@ import { useState } from "react";
 import { Check, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter, usePathname } from "next/navigation";
-import { useThemeStore } from "@/store";
 
 const languages = [
   {
@@ -21,14 +20,6 @@ const languages = [
   {
     name: "vi",
     label: "Tiếng Việt",
-  },
-  {
-    name: "bn",
-    label: "বাংলা",
-  },
-  {
-    name: "ar",
-    label: "العربية",
   },
 ];
 
@@ -40,7 +31,6 @@ const Language = () => {
 
   const router = useRouter();
   const pathname = usePathname();
-  const { setRtl } = useThemeStore();
   const found = pathname
     ? languages.find((lang) => pathname.includes(lang.name))
     : null;
@@ -53,7 +43,6 @@ const Language = () => {
     if (selected) {
       setSelectedLanguage(selected);
     }
-    setRtl(lang === "ar");
     if (pathname) {
       router.push(`/${lang}/${pathname.split("/")[2]}`);
     }

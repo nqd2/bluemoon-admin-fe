@@ -21,7 +21,7 @@ import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { themes } from "@/config/thems";
 import { useTheme } from "next-themes";
 import { hslToHex, hexToRGB } from "@/lib/utils";
-import { useThemeStore } from "@/store";
+import { siteConfig } from "@/config/site";
 
 
 interface CardSnippetProps {
@@ -35,8 +35,7 @@ const CardSnippet = ({ title, code, children }: CardSnippetProps) => {
     setShow(!show);
   };
   const { theme: mode } = useTheme();
-  const { theme: config, setTheme: setConfig } = useThemeStore();
-  const newTheme = themes.find((theme) => theme.name === config);
+  const newTheme = themes.find((theme) => theme.name === siteConfig.theme);
 
   const hslPrimary = `hsla(${newTheme?.cssVars[mode === "dark" ? "dark" : "light"][
     "secondary-foreground"

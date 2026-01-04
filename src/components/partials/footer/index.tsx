@@ -1,14 +1,16 @@
 import React from "react";
-import { useSidebar, useThemeStore } from "@/store";
+import { useSidebar } from "@/store";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import MobileFooter from "./mobile-footer";
 import FooterLayout from "./footer-layout";
 import { useMounted } from "@/hooks/use-mounted";
+import { siteConfig } from "@/config/site";
 
 const Footer = ({ handleOpenSearch }: { handleOpenSearch: () => void }) => {
   const { collapsed, sidebarType } = useSidebar();
-  const { layout, footerType } = useThemeStore();
+  const layout = siteConfig.layout;
+  const footerType = siteConfig.footerType;
   const mounted = useMounted();
   const isMobile = useMediaQuery("(min-width: 768px)");
 

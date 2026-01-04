@@ -54,8 +54,9 @@ export async function loginAction(
   const { username, password } = validatedFields.data;
 
   try {
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
     const response = await fetch(
-      `${process.env.BACKEND_URL}/api/auth/login`,
+      `${backendUrl}/api/auth/login`,
       {
         method: "POST",
         headers: {
@@ -80,7 +81,7 @@ export async function loginAction(
       };
     }
 
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
 
     cookieStore.set("access_token", data.token, {
       httpOnly: true,
@@ -124,8 +125,9 @@ export async function registerAction(
   const { username, password, code } = validatedFields.data;
 
   try {
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
     const response = await fetch(
-      `${process.env.BACKEND_URL}/api/auth/register`,
+      `${backendUrl}/api/auth/register`,
       {
         method: "POST",
         headers: {
@@ -163,7 +165,7 @@ export async function registerAction(
     }
 
     if (data.token) {
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
       cookieStore.set("access_token", data.token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
@@ -187,13 +189,13 @@ export async function registerAction(
 }
 
 export async function logoutAction() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   cookieStore.delete("access_token");
 
   return { success: true };
 }
 
 export async function getAccessToken(): Promise<string | null> {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   return cookieStore.get("access_token")?.value || null;
 }

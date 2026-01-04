@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import ThemeCustomize from "../customizer/theme-customizer";
-import { MenuBar, Settings, SiteLogo, DSearch } from "@/components/svg";
+import { SiteLogo, DSearch } from "@/components/svg";
 import Link from "next/link";
+
 const MobileFooter = ({ handleOpenSearch }: { handleOpenSearch: () => void }) => {
   return (
     <footer className="bg-card bg-no-repeat   shadow-[0_-4px_29px_#9595952b] dark:shadow-[0_-4px_29px_#000000cc] footer-bg  border-t dark:border-none flex justify-around items-center backdrop-filter backdrop-blur-[40px] fixed left-0 w-full z-50 bottom-0 py-[12px] px-4">
@@ -19,12 +19,6 @@ const MobileFooter = ({ handleOpenSearch }: { handleOpenSearch: () => void }) =>
             <SiteLogo className="h-8 w-8  text-primary-foreground" />
           </Link>
         </div>
-      </div>
-      <div className="flex flex-col items-center justify-center">
-        <ThemeCustomize
-          trigger={<Settings className="h-6 w-6  cursor-pointer" />}
-        />
-        <p className="mb-0 mt-1.5 text-xs text-default-600">Settings</p>
       </div>
     </footer>
   );
