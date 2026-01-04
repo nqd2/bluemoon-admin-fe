@@ -40,7 +40,7 @@ export default function ApartmentDetailView({ apartment }: ApartmentDetailViewPr
           <CardContent className="space-y-4">
             <div className="flex justify-between border-b pb-2">
               <span className="text-muted-foreground">Tên hộ</span>
-              <span className="font-medium">{apartment.name}</span>
+              <span className="font-medium">{apartment.ownerName || "-"}</span>
             </div>
             <div className="flex justify-between border-b pb-2">
               <span className="text-muted-foreground">Số phòng</span>

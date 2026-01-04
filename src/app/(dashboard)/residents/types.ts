@@ -7,7 +7,7 @@ export interface Resident {
   identityCard: string;
   hometown?: string;
   job?: string;
-  status?: "Thường trú" | "Tạm trú" | "Tạm vắng";
+  residencyStatus?: "Thường trú" | "Tạm trú" | "Tạm vắng";
   roleInApartment?: string;
   apartmentId?: {
     _id: string;
@@ -26,11 +26,12 @@ export interface CreateResidentPayload {
   identityCard: string;
   hometown?: string;
   job?: string;
+  apartmentId?: string;
 }
 
 // Request payload cho việc cập nhật resident
 export interface UpdateResidentPayload extends Partial<CreateResidentPayload> {
-  status?: string;
+  residencyStatus?: string;
   apartmentId?: string;
 }
 

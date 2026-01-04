@@ -63,9 +63,9 @@ const LoginForm = () => {
       try {
         const result = await signIn("Credentials", {
           username: data.username,
-          password: data.password,
-          redirect: false,
-        });
+        password: data.password,
+        redirect: false,
+      });
 
         if (result?.error) {
           console.error("[Login Form] Login error:", result.error);
