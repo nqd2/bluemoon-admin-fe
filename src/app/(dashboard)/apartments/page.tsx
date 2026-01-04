@@ -18,7 +18,7 @@ function LoadingState() {
 async function ApartmentContent({ searchParams }: { searchParams: SearchParams }) {
   const page = typeof searchParams.page === "string" ? parseInt(searchParams.page) : 1;
   const keyword = typeof searchParams.keyword === "string" ? searchParams.keyword : "";
-  const limit = 10;
+  const limit = typeof searchParams.limit === "string" ? parseInt(searchParams.limit) : 10;
 
   const result = await getApartments({ page, limit, keyword });
 
@@ -27,6 +27,7 @@ async function ApartmentContent({ searchParams }: { searchParams: SearchParams }
       initialData={result.data}
       searchKeyword={keyword}
       currentPage={page}
+      limit={limit}
     />
   );
 }

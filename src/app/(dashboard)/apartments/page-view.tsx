@@ -15,12 +15,14 @@ interface ApartmentPageViewProps {
   initialData?: ApartmentListResponse;
   searchKeyword?: string;
   currentPage?: number;
+  limit?: number;
 }
 
 export default function ApartmentPageView({
   initialData,
   searchKeyword = "",
   currentPage = 1,
+  limit = 10,
 }: ApartmentPageViewProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -30,7 +32,12 @@ export default function ApartmentPageView({
   const [searchTerm, setSearchTerm] = useState(searchKeyword);
 
   const apartments = initialData?.data || [];
-  const pagination = initialData?.pagination || { page: 1, limit: 10, total: 0, totalPages: 1 };
+  const pagination = { 
+    page: initialData?.pagination?.page || 1, 
+    limit: limit, 
+    total: initialData?.pagination?.total || 0, 
+    totalPages: initialData?.pagination?.totalPages || 1 
+  };
 
   useEffect(() => {
     setSearchTerm(searchKeyword);
@@ -39,8 +46,13 @@ export default function ApartmentPageView({
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     startTransition(() => {
-      const params = new URLSearchParams();
-      if (searchTerm.trim()) params.set("keyword", searchTerm.trim());
+      const params = new URLSearchParams(searchParams.toString());
+      if (searchTerm.trim()) {
+        params.set("keyword", searchTerm.trim());
+      } else {
+        params.delete("keyword");
+      }
+      params.set("page", "1");
       router.push(`/apartments?${params.toString()}`);
     });
   };
@@ -91,7 +103,11 @@ export default function ApartmentPageView({
       <Card>
         <CardContent className="p-0">
           <ApartmentTable apartments={apartments} />
-          <ApartmentPagination currentPage={pagination.page} totalPages={pagination.totalPages} />
+          <ApartmentPagination 
+            currentPage={pagination.page} 
+            totalPages={pagination.totalPages} 
+            limit={pagination.limit}
+          />
         </CardContent>
       </Card>
 

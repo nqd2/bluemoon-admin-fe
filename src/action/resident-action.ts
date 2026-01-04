@@ -33,10 +33,10 @@ async function getAccessToken(): Promise<string | null> {
  * Lấy danh sách residents với phân trang và tìm kiếm
  */
 export async function getResidents(params?: {
-  page?: number;
-  limit?: number;
-  keyword?: string;
-}): Promise<ActionResponse<ResidentListResponse>> {
+    page?: number;
+    limit?: number;
+    keyword?: string;
+  }): Promise<ActionResponse<ResidentListResponse>> {
   try {
     const token = await getAccessToken();
     if (!token) {
@@ -62,6 +62,7 @@ export async function getResidents(params?: {
     const data = await response.json();
 
     if (!response.ok) {
+      console.error("Fetch failed:", data);
       return {
         success: false,
         message: data.message || "Không thể tải danh sách cư dân",
@@ -73,7 +74,7 @@ export async function getResidents(params?: {
       data: data,
     };
   } catch (error) {
-    console.error("Get residents error:", error);
+    console.error("❌ Get residents error:", error);
     return {
       success: false,
       message: "Lỗi kết nối, vui lòng thử lại sau",
