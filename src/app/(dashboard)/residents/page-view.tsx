@@ -15,12 +15,14 @@ interface ResidentPageViewProps {
   initialData?: ResidentListResponse;
   searchKeyword?: string;
   currentPage?: number;
+  limit?: number;
 }
 
 export default function ResidentPageView({
   initialData,
   searchKeyword = "",
   currentPage = 1,
+  limit = 10,
 }: ResidentPageViewProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -32,7 +34,7 @@ export default function ResidentPageView({
   const residents = initialData?.residents || [];
   const pagination = {
     page: initialData?.page || 1,
-    limit: 10,
+    limit: limit,
     total: initialData?.total || 0,
     totalPages: initialData?.pages || 1,
   };
@@ -45,11 +47,16 @@ export default function ResidentPageView({
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     startTransition(() => {
-      const params = new URLSearchParams();
+      const params = new URLSearchParams(searchParams.toString());
       if (searchTerm.trim()) {
         params.set("keyword", searchTerm.trim());
+      } else {
+        params.delete("keyword");
       }
       params.set("page", "1"); // Reset to first page on search
+      // limit is already preserving in searchParams or we can rely on prop
+      // Using searchParams.toString() copies existing params including limit
+      
       router.push(`/residents?${params.toString()}`);
     });
   };
@@ -115,7 +122,10 @@ export default function ResidentPageView({
                 variant="outline"
                 onClick={() => {
                   setSearchTerm("");
-                  router.push("/residents");
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.delete("keyword");
+                  params.set("page", "1");
+                  router.push(`/residents?${params.toString()}`);
                 }}
               >
                 Xóa bộ lọc
@@ -140,6 +150,7 @@ export default function ResidentPageView({
           <ResidentPagination
             currentPage={pagination.page}
             totalPages={pagination.totalPages}
+            limit={pagination.limit}
           />
         </CardContent>
       </Card>

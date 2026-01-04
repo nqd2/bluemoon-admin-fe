@@ -39,6 +39,7 @@ async function ResidentContent({
       initialData={result.data}
       searchKeyword={keyword}
       currentPage={page}
+      limit={limit}
     />
   );
 }
