@@ -5,7 +5,25 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function formatDateTime(dateString: string) {
+  if (!dateString) return "Chưa cập nhật";
+  try {
+      const date = new Date(dateString);
+      
+      // Kiểm tra nếu date không hợp lệ
+      if (isNaN(date.getTime())) return dateString;
 
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Tháng trong JS bắt đầu từ 0
+      const year = date.getFullYear().toString().slice(-2); // Lấy 2 số cuối của năm
+
+      return `${hours}:${minutes} ${day}/${month}/${year}`;
+  } catch (e) {
+      return dateString;
+  }
+}
 
 
 export const isLocationMatch = (
@@ -144,14 +162,7 @@ export function getWords(inputString: string): string {
 
 // for path name
 export function getDynamicPath(pathname: any): any {
-  const prefixes = ["en", "bn", "ar"];
-
-  for (const prefix of prefixes) {
-    if (pathname.startsWith(`/${prefix}/`)) {
-      return `/${pathname.slice(prefix.length + 2)}`;
-    }
-  }
-
+  // Đã loại bỏ lang segment, trả về pathname trực tiếp
   return pathname;
 }
 

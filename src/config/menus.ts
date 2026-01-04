@@ -1,8 +1,11 @@
 import {
   DashBoard,
+  Users,
+  Building,
+  Files,
+  Graph,
   Sheild,
   Error,
-  Graph,
 } from "@/components/svg";
 
 export interface MenuItemProps {
@@ -33,30 +36,29 @@ export const menusConfig = {
         href: "/dashboard",
       },
       {
-        title: "Authentication",
+        title: "QL Cư dân",
+        icon: Users,
+        href: "/residents",
+      },
+      {
+        title: "QL Căn hộ",
+        icon: Building,
+        href: "/apartments",
+      },
+      {
+        title: "QL Khoản thu",
+        icon: Files,
+        href: "/fees",
+      },
+      {
+        title: "QL Giao dịch",
+        icon: Graph,
+        href: "/transactions",
+      },
+      {
+        title: "Mã đăng ký",
         icon: Sheild,
-        child: [
-          {
-            title: "Sign In",
-            href: "/auth/login",
-          },
-          {
-            title: "Sign Up",
-            href: "/auth/register",
-          },
-          {
-            title: "Forgot Password",
-            href: "/auth/forgot",
-          },
-          {
-            title: "Verify Email",
-            href: "/auth/verify",
-          },
-          {
-            title: "Create Password",
-            href: "/auth/create-password",
-          },
-        ],
+        href: "/registration-codes",
       },
       {
         title: "Error Pages",
@@ -84,7 +86,7 @@ export const menusConfig = {
     classic: [
       {
         isHeader: true,
-        title: "menu",
+        title: "Menu",
       },
       {
         title: "Dashboard",
@@ -93,33 +95,36 @@ export const menusConfig = {
       },
       {
         isHeader: true,
-        title: "Pages",
+        title: "Quản lý",
       },
       {
-        title: "Authentication",
+        title: "QL Cư dân",
+        icon: Users,
+        href: "/residents",
+      },
+      {
+        title: "QL Căn hộ",
+        icon: Building,
+        href: "/apartments",
+      },
+      {
+        title: "QL Khoản thu",
+        icon: Files,
+        href: "/fees",
+      },
+      {
+        title: "QL Giao dịch",
+        icon: Graph,
+        href: "/transactions",
+      },
+      {
+        isHeader: true,
+        title: "Hệ thống",
+      },
+      {
+        title: "Mã đăng ký",
         icon: Sheild,
-        child: [
-          {
-            title: "Sign In",
-            href: "/auth/login",
-          },
-          {
-            title: "Sign Up",
-            href: "/auth/register",
-          },
-          {
-            title: "Forgot Password",
-            href: "/auth/forgot",
-          },
-          {
-            title: "Verify Email",
-            href: "/auth/verify",
-          },
-          {
-            title: "Create Password",
-            href: "/auth/create-password",
-          },
-        ],
+        href: "/registration-codes",
       },
       {
         title: "Error Pages",

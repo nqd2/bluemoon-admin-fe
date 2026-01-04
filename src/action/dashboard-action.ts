@@ -1,38 +1,11 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { DashboardStats } from "@/app/(dashboard)/dashboard/types";
 
-export interface DashboardStats {
-  residents?: {
-    total: number;
-    temporary: number;
-    permanent: number;
-  };
-  apartments?: {
-    total: number;
-    occupied: number;
-    vacant: number;
-  };
-  revenue?: {
-    total: number;
-    thisMonth: number;
-    lastMonth: number;
-  };
-  transactions?: {
-    recent: Array<{
-      id: string;
-      apartmentId: string;
-      apartmentName?: string;
-      feeId: string;
-      feeTitle?: string;
-      totalAmount: number;
-      payerName?: string;
-      status: string;
-      createdAt: string;
-    }>;
-    total: number;
-  };
-}
+// Re-export type for backward compatibility
+export type { DashboardStats };
 
 export interface DashboardResponse {
   success: boolean;
@@ -46,8 +19,8 @@ export interface DashboardResponse {
  */
 export async function getDashboardStats(): Promise<DashboardResponse> {
   try {
-    const cookieStore = cookies();
-    const token = cookieStore.get("access_token")?.value;
+    const session = await getServerSession(authOptions);
+    const token = (session?.user as any)?.accessToken;
 
     if (!token) {
       return {
@@ -95,4 +68,3 @@ export async function getDashboardStats(): Promise<DashboardResponse> {
     };
   }
 }
-
