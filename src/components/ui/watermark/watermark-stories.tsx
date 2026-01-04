@@ -43,7 +43,7 @@ export const MultilineText = Template({
 
 
 export const MultilineTextWithLineHeight = Template({
-  text: "🌚\n🚀",
+  text: "Watermark\nText",
   multiline: true,
   lineHeight: "3.2rem",
   gutter: 24,

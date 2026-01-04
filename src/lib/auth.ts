@@ -1,60 +1,80 @@
 import Credentials from "next-auth/providers/credentials";
 
-import {User as UserType, user} from "@/app/api/user/data";
-import GoogleProvider from "next-auth/providers/google";
-import GithubProvider from "next-auth/providers/github";
-
-import avatar3 from "@/public/images/avatar/avatar-3.jpg";
-
-
 export const authOptions = {
   providers: [
-    GoogleProvider({
-      clientId: process.env.AUTH_GOOGLE_ID as string,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET as string,
-    }),
-    GithubProvider({
-      clientId: process.env.AUTH_GITHUB_ID as string,
-      clientSecret: process.env.AUTH_GITHUB_SECRET as string,
-    }),
     Credentials({
       name: "credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
+        username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
-        async authorize(credentials) {
-             const {email, password} = credentials as {
-          email: string,
-          password: string,
+      async authorize(credentials) {
+        const { username, password } = credentials as {
+          username: string;
+          password: string;
         };
-          
-        const foundUser = user.find((u) => u.email === email)
 
-        if (!foundUser) {
+        try {
+          // Gọi Backend API để xác thực
+          const response = await fetch(
+            `${process.env.BACKEND_URL}/api/auth/login`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ username, password }),
+            }
+          );
+
+          if (!response.ok) {
+            return null;
+          }
+
+          const data = await response.json();
+
+          // Trả về user object cho NextAuth
+          return {
+            id: data.user?.id || data.id,
+            name: data.user?.username || username,
+            username: data.user?.username || username,
+            role: data.user?.role || data.role,
+            accessToken: data.token,
+          };
+        } catch (error) {
+          console.error("Auth error:", error);
           return null;
         }
-
-        const valid = password === foundUser.password  
-
-        if (!valid) {
-          
-          return null;
-        }
-
-        if (foundUser) {
-          return foundUser as any
-          
-        }
-        return null;
-      }
-      
+      },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user }: { token: any; user: any }) {
+      // Lưu access token và thông tin user vào JWT
+      if (user) {
+        token.accessToken = user.accessToken;
+        token.id = user.id;
+        token.username = user.username;
+        token.role = user.role;
+      }
+      return token;
+    },
+    async session({ session, token }: { session: any; token: any }) {
+      // Truyền access token và thông tin vào session
+      session.accessToken = token.accessToken;
+      session.user.id = token.id;
+      session.user.username = token.username;
+      session.user.role = token.role;
+      return session;
+    },
+  },
+  pages: {
+    signIn: "/auth/login",
+    error: "/auth/login",
+  },
   secret: process.env.AUTH_SECRET,
-
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as const,
   },
   debug: process.env.NODE_ENV !== "production",
 };
