@@ -1,22 +1,20 @@
 "use client";
 import { Inter } from "next/font/google";
-import { useThemeStore } from "@/store";
 import { ThemeProvider } from "next-themes";
 import { cn } from "@/lib/utils";
 import { Toaster as ReactToaster } from "@/components/ui/toaster";
 import { Toaster } from "react-hot-toast";
 import { SonnToaster } from "@/components/ui/sonner";
+import { siteConfig } from "@/config/site";
 
 const inter = Inter({ subsets: ["latin"] });
 const Providers = ({ children }: { children: React.ReactNode }) => {
-  const { theme, radius } = useThemeStore();
-
   return (
     <body
-      className={cn("dash-tail-app ", inter.className, "theme-" + theme)}
+      className={cn("dash-tail-app ", inter.className, "theme-" + siteConfig.theme)}
       style={
         {
-          "--radius": `${radius}rem`,
+          "--radius": `${siteConfig.radius}rem`,
         } as React.CSSProperties
       }
     >

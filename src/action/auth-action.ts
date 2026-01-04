@@ -80,7 +80,7 @@ export async function loginAction(
       };
     }
 
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
 
     cookieStore.set("access_token", data.token, {
       httpOnly: true,
@@ -163,7 +163,7 @@ export async function registerAction(
     }
 
     if (data.token) {
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
       cookieStore.set("access_token", data.token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
@@ -187,13 +187,13 @@ export async function registerAction(
 }
 
 export async function logoutAction() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   cookieStore.delete("access_token");
 
   return { success: true };
 }
 
 export async function getAccessToken(): Promise<string | null> {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   return cookieStore.get("access_token")?.value || null;
 }

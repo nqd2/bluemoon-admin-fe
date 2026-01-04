@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import { cn, isLocationMatch, getDynamicPath, translate } from "@/lib/utils";
 import { menusConfig, ModernNavType, } from "@/config/menus";
 import SingleIconMenu from "./single-icon-menu";
-import { useRouter, usePathname } from "next/navigation";
-import { useSidebar, useThemeStore } from "@/store";
+import { usePathname } from "next/navigation";
+import { useSidebar } from "@/store";
 import MenuItem from "./menu-item";
 import NestedMenus from "./nested-menus";
-import Image from "next/image";
 import Link from "next/link";
 import FooterMenu from "./footer-menu";
 import { SiteLogo } from "@/components/svg";
@@ -21,7 +20,6 @@ const ModuleSidebar = ({ trans }: { trans: any }) => {
   const menus = menusConfig?.sidebarNav?.modern || [];
   const { subMenu, setSubmenu, collapsed, setCollapsed, sidebarBg } =
     useSidebar();
-  const { isRtl } = useThemeStore();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [currentSubMenu, setCurrentSubMenu] = useState<any[]>([]);
   const [nestedIndex, setNestedIndex] = useState<number | null>(null);
@@ -29,10 +27,8 @@ const ModuleSidebar = ({ trans }: { trans: any }) => {
   // mobile menu overlay
   const [menuOverlay, setMenuOverlay] = useState<boolean>(false);
   const isDesktop = useMediaQuery("(min-width: 1280px)");
-  const isMobile = useMediaQuery("(min-width: 768px)");
 
   // location
-
   const pathname = usePathname();
   const locationName = getDynamicPath(pathname);
 
@@ -217,7 +213,7 @@ const ModuleSidebar = ({ trans }: { trans: any }) => {
             )}
           </h2>
           <ScrollArea className="h-[calc(100%-40px)]  grow ">
-            <div className="px-4 " dir={isRtl ? "rtl" : "ltr"}>
+            <div className="px-4 ">
               <ul>
                 {currentSubMenu?.map((childItem, j) => (
                   <li key={j} className="mb-1.5 last:mb-0">

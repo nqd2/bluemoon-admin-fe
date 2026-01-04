@@ -16,10 +16,9 @@ const DashboardPageView = ({ stats }: DashboardPageViewProps) => {
   return (
     <div className="space-y-6">
       <div className="flex items-center flex-wrap justify-between gap-4">
-        <div className="text-2xl font-medium text-default-800">Analytics Dashboard</div>
+        <div className="text-2xl font-bold text-white">Bảng số liệu</div>
       </div>
 
-      {/* 1. KPI Cards */}
       <div className="grid grid-cols-12 gap-6">
         <div className="col-span-12 lg:col-span-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

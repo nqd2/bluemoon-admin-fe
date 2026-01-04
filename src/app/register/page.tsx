@@ -1,16 +1,10 @@
 "use client";
-import Image from "next/image";
 import RegisterForm from "@/components/auth/register/reg-form";
-import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
-import { useThemeStore } from "@/store";
 
 const RegisterPage = () => {
-  const { isRtl } = useThemeStore();
-
   return (
     <div className="loginwrapper flex items-center min-h-screen overflow-hidden w-full">
       <div className="lg-inner-column grid grid-cols-2 w-full justify-center overflow-y-auto p-4">
@@ -33,4 +27,3 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
-

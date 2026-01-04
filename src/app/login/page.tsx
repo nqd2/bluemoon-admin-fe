@@ -1,16 +1,10 @@
 "use client";
-import Image from "next/image";
 import LoginForm from "@/components/auth/login-form";
-import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
-import { useThemeStore } from "@/store";
 
 const LoginPage = () => {
-  const { isRtl } = useThemeStore();
-
   return (
     <div className="loginwrapper flex items-center min-h-screen overflow-hidden w-full">
       <div className="lg-inner-column grid lg:grid-cols-2 w-full flex-wrap justify-center p-4 overflow-y-auto">
@@ -33,4 +27,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
