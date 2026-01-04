@@ -13,14 +13,14 @@ import type { ApartmentListResponse } from "./types";
 
 interface ApartmentPageViewProps {
   initialData?: ApartmentListResponse;
-  searchKeyword?: string;
+  buildingFilter?: string;
   currentPage?: number;
   limit?: number;
 }
 
 export default function ApartmentPageView({
   initialData,
-  searchKeyword = "",
+  buildingFilter = "",
   currentPage = 1,
   limit = 10,
 }: ApartmentPageViewProps) {
@@ -29,7 +29,7 @@ export default function ApartmentPageView({
   const [isPending, startTransition] = useTransition();
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(searchKeyword);
+  const [building, setBuilding] = useState(buildingFilter);
 
   const apartments = initialData?.data || [];
   const pagination = { 
@@ -40,18 +40,27 @@ export default function ApartmentPageView({
   };
 
   useEffect(() => {
-    setSearchTerm(searchKeyword);
-  }, [searchKeyword]);
+    setBuilding(buildingFilter);
+  }, [buildingFilter]);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleFilter = (e: React.FormEvent) => {
     e.preventDefault();
     startTransition(() => {
       const params = new URLSearchParams(searchParams.toString());
-      if (searchTerm.trim()) {
-        params.set("keyword", searchTerm.trim());
+      if (building.trim()) {
+        params.set("building", building.trim());
       } else {
-        params.delete("keyword");
+        params.delete("building");
       }
+      params.set("page", "1");
+      router.push(`/apartments?${params.toString()}`);
+    });
+  };
+
+  const handleClearFilter = () => {
+    startTransition(() => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("building");
       params.set("page", "1");
       router.push(`/apartments?${params.toString()}`);
     });
@@ -82,20 +91,25 @@ export default function ApartmentPageView({
 
       <Card>
         <CardHeader className="pb-4">
-          <CardTitle className="text-lg">Tìm kiếm</CardTitle>
+          <CardTitle className="text-lg">Lọc theo Tòa nhà</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSearch} className="flex gap-3">
+          <form onSubmit={handleFilter} className="flex gap-3">
             <Input
-              placeholder="Tìm theo tên chủ hộ, số phòng..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Nhập mã tòa nhà (ví dụ: A, B, C)..."
+              value={building}
+              onChange={(e) => setBuilding(e.target.value)}
               className="max-w-md"
             />
             <Button type="submit" disabled={isPending}>
               {isPending ? <Loader2 className="animate-spin h-4 w-4" /> : <Search className="h-4 w-4" />}
-              <span className="ml-2">Tìm kiếm</span>
+              <span className="ml-2">Lọc</span>
             </Button>
+            {building && (
+              <Button type="button" variant="outline" onClick={handleClearFilter} disabled={isPending}>
+                Xóa bộ lọc
+              </Button>
+            )}
           </form>
         </CardContent>
       </Card>

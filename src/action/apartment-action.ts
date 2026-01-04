@@ -1,3 +1,4 @@
+"use server"
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -24,10 +25,42 @@ async function getAccessToken(): Promise<string | null> {
   return (session?.user as any)?.accessToken || null;
 }
 
+/**
+ * Lấy danh sách apartments đơn giản (không pagination) để dùng trong dropdown
+ */
+export async function getApartmentsSimple(): Promise<ActionResponse<Apartment[]>> {
+  try {
+    const token = await getAccessToken();
+    if (!token) {
+      redirect("/login");
+    }
+
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
+    const res = await fetch(`${backendUrl}/api/apartments?page=1&limit=1000`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      return { success: false, message: data.message || "Không thể tải danh sách căn hộ" };
+    }
+
+    return { success: true, data: data.data || [] };
+  } catch (error) {
+    console.error("Get apartments simple error:", error);
+    return { success: false, message: "Lỗi kết nối" };
+  }
+}
+
 export async function getApartments(params?: {
   page?: number;
   limit?: number;
-  keyword?: string;
+  building?: string;
 }): Promise<ActionResponse<ApartmentListResponse>> {
   try {
     const token = await getAccessToken();
@@ -38,7 +71,7 @@ export async function getApartments(params?: {
     const searchParams = new URLSearchParams();
     if (params?.page) searchParams.set("page", params.page.toString());
     if (params?.limit) searchParams.set("limit", params.limit.toString());
-    if (params?.keyword) searchParams.set("keyword", params.keyword);
+    if (params?.building) searchParams.set("building", params.building);
 
     const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
     const res = await fetch(`${backendUrl}/api/apartments?${searchParams}`, {

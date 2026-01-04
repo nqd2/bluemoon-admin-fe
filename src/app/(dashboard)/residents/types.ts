@@ -31,6 +31,7 @@ export interface CreateResidentPayload {
 // Request payload cho việc cập nhật resident
 export interface UpdateResidentPayload extends Partial<CreateResidentPayload> {
   status?: string;
+  apartmentId?: string;
 }
 
 // Response từ API list residents
