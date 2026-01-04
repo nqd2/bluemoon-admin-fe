@@ -1,80 +1,111 @@
-import Credentials from "next-auth/providers/credentials";
+import { AuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 
-export const authOptions = {
+interface BackendResponse {
+  token?: string;
+  user?: {
+    id: string;
+    username: string;
+    role?: string;
+  };
+  success?: boolean;
+  message?: string;
+}
+
+export const authOptions: AuthOptions = {
   providers: [
-    Credentials({
-      name: "credentials",
+    CredentialsProvider({
+      name: "Credentials",
       credentials: {
         username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
-        const { username, password } = credentials as {
-          username: string;
-          password: string;
-        };
+      async authorize(credentials, req): Promise<any | null> {
+        if (!credentials?.username || !credentials?.password) {
+          return null;
+        }
+
+        const backendUrl = process.env.BACKEND_URL;
+
+        if (!backendUrl) {
+          console.error("BACKEND_URL is not defined");
+          throw new Error("Lỗi cấu hình máy chủ");
+        }
 
         try {
-          // Gọi Backend API để xác thực
-          const response = await fetch(
-            `${process.env.BACKEND_URL}/api/auth/login`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ username, password }),
-            }
-          );
+          const res = await fetch(`${backendUrl}/api/auth/login`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username: credentials.username,
+              password: credentials.password,
+            }),
+          });
 
-          if (!response.ok) {
-            return null;
+          const responseData: BackendResponse = await res.json();
+
+          // Kiểm tra response thành công (200) VÀ có token
+          if (res.ok && responseData.token) {
+            // Nếu thành công, return đối tượng user
+            return {
+              id: responseData.user?.id || "",
+              name: responseData.user?.username || credentials.username,
+              email: credentials.username, // Dùng username làm email cho NextAuth
+              username: responseData.user?.username || credentials.username,
+              role: responseData.user?.role || "user",
+              accessToken: responseData.token, // Token JWT từ backend
+            };
+          } else {
+            // Ném lỗi với message từ backend
+            throw new Error(
+              responseData.message || "Username hoặc mật khẩu không đúng"
+            );
           }
-
-          const data = await response.json();
-
-          // Trả về user object cho NextAuth
-          return {
-            id: data.user?.id || data.id,
-            name: data.user?.username || username,
-            username: data.user?.username || username,
-            role: data.user?.role || data.role,
-            accessToken: data.token,
-          };
-        } catch (error) {
-          console.error("Auth error:", error);
-          return null;
+        } catch (error: any) {
+          console.error("Authorize error:", error.message);
+          throw new Error(error.message);
         }
       },
     }),
   ],
+
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+
+  session: {
+    strategy: "jwt",
+    maxAge: 24 * 60 * 60, // 1 day
+  },
+
   callbacks: {
-    async jwt({ token, user }: { token: any; user: any }) {
-      // Lưu access token và thông tin user vào JWT
+    async jwt({ token, user }) {
       if (user) {
-        token.accessToken = user.accessToken;
-        token.id = user.id;
-        token.username = user.username;
-        token.role = user.role;
+        const adminUser = user as any;
+        token.accessToken = adminUser.accessToken;
+        token.id = adminUser.id;
+        token.username = adminUser.username;
+        token.role = adminUser.role;
+        // Lưu thời điểm đăng nhập
+        token.loginTime = Date.now();
       }
+
       return token;
     },
-    async session({ session, token }: { session: any; token: any }) {
-      // Truyền access token và thông tin vào session
-      session.accessToken = token.accessToken;
-      session.user.id = token.id;
-      session.user.username = token.username;
-      session.user.role = token.role;
+    async session({ session, token }) {
+      if (session.user) {
+        (session.user as any).accessToken = token.accessToken;
+        (session.user as any).id = token.id;
+        (session.user as any).username = token.username;
+        (session.user as any).role = token.role;
+      }
       return session;
     },
   },
+
   pages: {
     signIn: "/auth/login",
-    error: "/auth/login",
   },
-  secret: process.env.AUTH_SECRET,
-  session: {
-    strategy: "jwt" as const,
-  },
+
   debug: process.env.NODE_ENV !== "production",
 };

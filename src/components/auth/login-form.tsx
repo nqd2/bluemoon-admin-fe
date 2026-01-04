@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useFormState } from "react-dom";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
@@ -14,11 +14,9 @@ import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { SiteLogo } from "@/components/svg";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { loginAction, AuthState } from "@/action/auth-action";
 
 // Schema validate theo FE-01: username (min 6) + password (min 6)
 const loginSchema = z.object({
@@ -42,12 +40,6 @@ const LoginForm = () => {
   );
   const isDesktop2xl = useMediaQuery("(max-width: 1530px)");
 
-  // Server Action state
-  const [state, formAction] = useFormState<AuthState | null, FormData>(
-    loginAction,
-    null
-  );
-
   // React Hook Form
   const {
     register,
@@ -62,26 +54,34 @@ const LoginForm = () => {
     },
   });
 
-  // Xử lý kết quả từ Server Action
-  useEffect(() => {
-    if (state?.success) {
-      toast.success(state.message);
-      router.push("/dashboard");
-    }
-  }, [state, router]);
-
   const togglePasswordType = () => {
     setPasswordType((prev) => (prev === "password" ? "text" : "password"));
   };
 
-  // Submit form qua Server Action
+  // Submit form qua NextAuth signIn
   const onSubmit = (data: LoginFormData) => {
-    const formData = new FormData();
-    formData.append("username", data.username);
-    formData.append("password", data.password);
+    startTransition(async () => {
+      try {
+        const result = await signIn("Credentials", {
+          username: data.username,
+          password: data.password,
+          redirect: false,
+        });
 
-    startTransition(() => {
-      formAction(formData);
+        if (result?.error) {
+          toast.error(
+            result.error === "CredentialsSignin"
+              ? "Username hoặc mật khẩu không đúng"
+              : result.error
+          );
+        } else if (result?.ok) {
+          toast.success("Đăng nhập thành công! Đang chuyển hướng...");
+          router.push("/dashboard");
+        }
+      } catch (error) {
+        console.error("Login Error:", error);
+        toast.error("Đã xảy ra lỗi không mong muốn.");
+      }
     });
   };
 
@@ -100,13 +100,6 @@ const LoginForm = () => {
         Đăng nhập để tiếp tục vào hệ thống quản trị.
       </div>
 
-      {/* Error Alert - Hiển thị lỗi từ API */}
-      {state && !state.success && (
-        <Alert color="destructive" variant="soft" className="mt-4">
-          <AlertDescription>{state.message}</AlertDescription>
-        </Alert>
-      )}
-
       {/* Login Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="mt-5 2xl:mt-7">
         {/* Username Field */}
@@ -124,7 +117,7 @@ const LoginForm = () => {
             id="username"
             placeholder="admin123"
             className={cn("", {
-              "border-destructive": errors.username || state?.errors?.username,
+              "border-destructive": errors.username,
             })}
             size={!isDesktop2xl ? "xl" : "lg"}
           />
@@ -132,12 +125,6 @@ const LoginForm = () => {
           {errors.username && (
             <p className="text-destructive text-sm mt-1">
               {errors.username.message}
-            </p>
-          )}
-          {/* Server validation error */}
-          {state?.errors?.username && (
-            <p className="text-destructive text-sm mt-1">
-              {state.errors.username[0]}
             </p>
           )}
         </div>
@@ -158,8 +145,7 @@ const LoginForm = () => {
               id="password"
               placeholder="••••••••"
               className={cn("pr-10", {
-                "border-destructive":
-                  errors.password || state?.errors?.password,
+                "border-destructive": errors.password,
               })}
               size={!isDesktop2xl ? "xl" : "lg"}
             />
@@ -185,12 +171,16 @@ const LoginForm = () => {
               {errors.password.message}
             </p>
           )}
-          {/* Server validation error */}
-          {state?.errors?.password && (
-            <p className="text-destructive text-sm mt-1">
-              {state.errors.password[0]}
-            </p>
-          )}
+        </div>
+
+        {/* Forgot Password Link */}
+        <div className="mt-4 flex justify-end">
+          <Link
+            href="/auth/forgot"
+            className="text-sm text-primary hover:underline"
+          >
+            Quên mật khẩu?
+          </Link>
         </div>
 
         {/* Submit Button */}
