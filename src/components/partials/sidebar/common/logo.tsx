@@ -1,4 +1,5 @@
-import { SiteLogo } from "@/components/svg";
+import Image from "next/image";
+
 import { useSidebar } from "@/store";
 import React from "react";
 
@@ -8,11 +9,10 @@ const SidebarLogo = ({ hovered }: { hovered?: boolean }) => {
     <div className="px-4 py-4 ">
       <div className=" flex items-center">
         <div className="flex flex-1 items-center gap-x-3  ">
-          <SiteLogo className="text-primary h-8 w-8" />
-          {(!collapsed || hovered) && (
-            <div className="flex-1  text-xl text-primary  font-semibold">
-              DashTail
-            </div>
+          {(!collapsed || hovered) ? (
+            <Image src="/images/logo/horizontal-logo.png" alt="BlueMoon Logo" width={150} height={32} className="h-8 w-auto object-contain" />
+          ) : (
+            <Image src="/images/logo/Bluemoon.png" alt="BlueMoon Logo" width={32} height={32} className="h-8 w-8" />
           )}
         </div>
         {sidebarType === "classic" && (!collapsed || hovered) && (

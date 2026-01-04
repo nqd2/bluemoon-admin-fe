@@ -16,6 +16,31 @@ export const metadata = {
     template: `%s - ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  icons: {
+    icon: "/images/logo/favicon.ico",
+  },
+  openGraph: {
+    title: siteConfig.name,
+    description: siteConfig.description || "BlueMoon Admin Dashboard for managing residents, apartments, and fees.",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://bluemoon.com",
+    siteName: siteConfig.name,
+    images: [
+      {
+        url: "/images/logo/Bluemoon.png",
+        width: 800,
+        height: 600,
+        alt: "BlueMoon Admin Dashboard",
+      },
+    ],
+    locale: "vi_VN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.name,
+    description: siteConfig.description || "BlueMoon Admin Dashboard for managing residents, apartments, and fees.",
+    images: ["/images/logo/Bluemoon.png"],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

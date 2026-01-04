@@ -10,7 +10,7 @@ import Inbox from "./inbox";
 import HorizontalMenu from "./horizontal-menu";
 import NotificationMessage from "./notification-message";
 
-import Language from "./language";
+// import Language from "./language";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import MobileMenuHandler from "./mobile-menu-handler";
 import ClassicHeader from "./layout/classic-header";
@@ -19,7 +19,7 @@ import FullScreen from "./full-screen";
 const NavTools = ({ isDesktop, isMobile, sidebarType }: { isDesktop: boolean; isMobile: boolean; sidebarType: string }) => {
   return (
     <div className="nav-tools flex items-center  gap-2">
-      {isDesktop && <Language />}
+      {/* {isDesktop && <Language />} */}
       {isDesktop && <FullScreen />}
 
       {/* <ThemeButton /> */}
