@@ -2,10 +2,10 @@
 
 
 export const siteConfig = {
-  name: "DashTail Next js Admin Template",
+  name: "BlueMoon Next js Admin Template",
   description: null,
   theme: "blue",
-  layout: "vertical",
+  layout: "semibox",
   // semi-box, horizontal, vertical
   hideSideBar: false,
   sidebarType: "module",
@@ -13,8 +13,8 @@ export const siteConfig = {
   sidebarColor: null,
   navbarType: "sticky",
   // sticky, floating, static
-  footerType: "static",
+  footerType: "sticky",
   // sticky,  static, hidden
   sidebarBg: "none",
-  radius: 0.5,
+  radius: 0.75,
 };

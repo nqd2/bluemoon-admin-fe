@@ -69,12 +69,11 @@ const RegisterForm = () => {
     setPasswordType((prev) => (prev === "password" ? "text" : "password"));
   };
 
-  // Submit form - Gọi API trực tiếp
+  // Submit form - Gọi API route (proxy đến BACKEND_URL)
   const onSubmit = async (data: RegisterFormData) => {
     startTransition(async () => {
       try {
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL;
-        const res = await fetch(`${backendUrl}/api/auth/register`, {
+        const res = await fetch("/api/auth/register", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -92,7 +91,7 @@ const RegisterForm = () => {
           toast.success(responseData.message || "Đăng ký thành công!");
           reset();
           // Chuyển đến trang login
-          router.push("/auth/login");
+          router.push("/login");
         } else {
           toast.error(
             responseData.message || "Đăng ký thất bại! Vui lòng thử lại."
@@ -252,7 +251,7 @@ const RegisterForm = () => {
       {/* Login Link */}
       <div className="mt-6 text-center text-base text-default-600">
         Đã có tài khoản?{" "}
-        <Link href="/auth/login" className="text-primary hover:underline">
+        <Link href="/login" className="text-primary hover:underline">
           Đăng nhập
         </Link>
       </div>

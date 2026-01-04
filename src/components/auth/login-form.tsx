@@ -14,9 +14,9 @@ import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SiteLogo } from "@/components/svg";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import Image from "next/image";
 
 // Schema validate theo FE-01: username (min 6) + password (min 6)
 const loginSchema = z.object({
@@ -64,9 +64,9 @@ const LoginForm = () => {
       try {
         const result = await signIn("Credentials", {
           username: data.username,
-          password: data.password,
-          redirect: false,
-        });
+        password: data.password,
+        redirect: false,
+      });
 
         if (result?.error) {
           toast.error(
@@ -89,7 +89,7 @@ const LoginForm = () => {
     <div className="w-full py-5">
       {/* Logo */}
       <Link href="/" className="inline-block">
-        <SiteLogo className="h-10 w-10 2xl:w-14 2xl:h-14 text-primary" />
+        <Image src="/images/logo/horizontal-logo.png" alt="BlueMoon Logo" width={180} height={40} className="w-auto h-10 2xl:h-14 object-contain text-primary" />
       </Link>
 
       {/* Header */}
@@ -155,14 +155,14 @@ const LoginForm = () => {
               onClick={togglePasswordType}
               tabIndex={-1}
             >
-              <Icon
+                <Icon
                 icon={
                   passwordType === "password"
                     ? "heroicons:eye"
                     : "heroicons:eye-slash"
                 }
-                className="w-5 h-5 text-default-400"
-              />
+                  className="w-5 h-5 text-default-400"
+                />
             </button>
           </div>
           {/* Client validation error */}
@@ -198,7 +198,7 @@ const LoginForm = () => {
       {/* Register Link */}
       <div className="mt-6 text-center text-base text-default-600">
         Chưa có tài khoản?{" "}
-        <Link href="/auth/register" className="text-primary hover:underline">
+        <Link href="/register" className="text-primary hover:underline">
           Đăng ký
         </Link>
       </div>
