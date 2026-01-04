@@ -17,15 +17,15 @@ function LoadingState() {
 
 async function ApartmentContent({ searchParams }: { searchParams: SearchParams }) {
   const page = typeof searchParams.page === "string" ? parseInt(searchParams.page) : 1;
-  const keyword = typeof searchParams.keyword === "string" ? searchParams.keyword : "";
+  const building = typeof searchParams.building === "string" ? searchParams.building : "";
   const limit = typeof searchParams.limit === "string" ? parseInt(searchParams.limit) : 10;
 
-  const result = await getApartments({ page, limit, keyword });
+  const result = await getApartments({ page, limit, building });
 
   return (
     <ApartmentPageView
       initialData={result.data}
-      searchKeyword={keyword}
+      buildingFilter={building}
       currentPage={page}
       limit={limit}
     />
