@@ -63,7 +63,7 @@ const LoginForm = () => {
           toast({
             title: "Đăng nhập thất bại",
             description: "Sai thông tin đăng nhập",
-            variant: "destructive",
+            color: "destructive",
           });
         } else if (result?.ok) {
           toast({
@@ -80,7 +80,7 @@ const LoginForm = () => {
           description: isNetworkError 
             ? "Lỗi hệ thống, vui lòng thử lại"
             : "Lỗi hệ thống, vui lòng thử lại",
-          variant: "destructive",
+          color: "destructive",
         });
       }
     });

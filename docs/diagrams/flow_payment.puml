@@ -4,8 +4,8 @@ participant "Frontend" as FE
 participant "API (Transaction Controller)" as API
 database "MongoDB" as DB
 
-Accountant -> FE: Select Apartment & Fee
-FE -> API: POST /api/transactions/calculate
+Accountant -> FE: Select Apartment & Fee (and Usage)
+FE -> API: POST /api/transactions/calculate (usage?)
 API -> DB: Get Apartment & Fee Info
 DB -> API: Return Info
 API -> API: Calculate Total Amount

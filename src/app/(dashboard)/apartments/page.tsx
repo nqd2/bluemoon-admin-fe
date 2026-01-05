@@ -21,7 +21,7 @@ async function ApartmentContent({ searchParams }: { searchParams: SearchParams }
   const limit = typeof searchParams.limit === "string" ? parseInt(searchParams.limit) : 10;
 
   const result = await getApartments({ page, limit, building });
-
+  console.log(result?.data?.total);
   return (
     <ApartmentPageView
       initialData={result.data}
