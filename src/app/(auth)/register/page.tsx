@@ -1,9 +1,5 @@
 import RegisterForm from "@/components/auth/register/reg-form";
 import Image from "next/image";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
 
 export const metadata = {
   title: "Đăng ký | Admin Dashboard",
@@ -37,12 +33,8 @@ const RegisterPage = () => {
           />
         </div>
 
-        {/* Register Card */}
-        <Card className="w-full">
-          <CardContent className="pt-6 md:pt-8">
-            <RegisterForm />
-          </CardContent>
-        </Card>
+        {/* Register Form */}
+        <RegisterForm />
       </div>
     </div>
   );
