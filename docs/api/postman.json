@@ -394,6 +394,27 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Get Apartment Bills",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/apartments/:id/bills",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apartments", ":id", "bills"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "APARTMENT_ID_HERE",
+                  "description": "Apartment ID"
+                }
+              ]
+            },
+            "description": "Get monthly bills and payment status for an apartment"
+          },
+          "response": []
         }
       ]
     },
@@ -456,6 +477,35 @@
               "raw": "{{baseUrl}}/api/fees/:id/status",
               "host": ["{{baseUrl}}"],
               "path": ["api", "fees", ":id", "status"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "FEE_ID_HERE",
+                  "description": "Fee ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Fee (Patch)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"unit\": \"kWh\",\n  \"amount\": 3000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/fees/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "fees", ":id"],
               "variable": [
                 {
                   "key": "id",

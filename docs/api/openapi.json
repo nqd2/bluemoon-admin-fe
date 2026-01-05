@@ -1,0 +1,618 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "BlueMoon Admin API",
+      "description": "API Documentation for BlueMoon Apartment Management System",
+      "version": "1.2.1",
+      "contact": {
+        "name": "BlueMoon Admin Team",
+        "email": "admin@bluemoon.com"
+      },
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "servers": [
+      {
+        "url": "http://localhost:5000",
+        "description": "Local Development Server"
+      }
+    ],
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      },
+      "schemas": {
+        "User": {
+          "type": "object",
+          "properties": {
+            "_id": { "type": "string" },
+            "username": { "type": "string" },
+            "role": {
+              "type": "string",
+              "enum": ["admin", "leader", "accountant"]
+            }
+          }
+        },
+        "Resident": {
+          "type": "object",
+          "properties": {
+            "_id": { "type": "string" },
+            "fullName": { "type": "string" },
+            "dob": { "type": "string", "format": "date" },
+            "gender": { "type": "string" },
+            "identityCard": { "type": "string" },
+            "hometown": { "type": "string" },
+            "job": { "type": "string" },
+            "apartmentId": { "type": "string" },
+            "roleInApartment": {
+              "type": "string",
+              "enum": ["Chủ hộ", "Thành viên"]
+            },
+            "phone": { "type": "string" },
+            "residencyStatus": {
+              "type": "string",
+              "enum": ["Thường trú", "Tạm trú", "Tạm vắng"]
+            }
+          }
+        },
+        "Apartment": {
+          "type": "object",
+          "properties": {
+            "_id": { "type": "string" },
+            "name": { "type": "string" },
+            "area": { "type": "number" },
+            "ownerId": { "type": "string" },
+            "apartmentNumber": { "type": "string" },
+            "building": { "type": "string" },
+            "members": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "Fee": {
+          "type": "object",
+          "properties": {
+            "_id": { "type": "string" },
+            "title": { "type": "string" },
+            "description": { "type": "string" },
+            "type": {
+              "type": "string",
+              "enum": ["Service", "Contribution", "Utility"]
+            },
+            "amount": { "type": "number" },
+            "unit": {
+              "type": "string",
+              "enum": ["hộ", "khẩu", "m2", "kWh", "m3"]
+            },
+            "isActive": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "security": [{ "bearerAuth": [] }],
+    "paths": {
+      "/api/auth/login": {
+        "post": {
+          "summary": "Login",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": { "type": "string" },
+                    "password": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "operationId": "loginUser",
+          "responses": {
+            "200": { "description": "Login success" },
+            "400": { "description": "Invalid credentials" }
+          },
+          "security": []
+        }
+      },
+      "/api/auth/register": {
+        "post": {
+          "summary": "Register",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": { "type": "string" },
+                    "password": { "type": "string" },
+                    "code": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "operationId": "registerUser",
+          "responses": {
+            "201": { "description": "User registered" },
+            "400": { "description": "Validation error" }
+          },
+          "security": []
+        }
+      },
+      "/api/residents": {
+        "get": {
+          "summary": "Get Residents List",
+          "parameters": [
+            { "in": "query", "name": "page", "schema": { "type": "integer" } },
+            { "in": "query", "name": "limit", "schema": { "type": "integer" } },
+            { "in": "query", "name": "keyword", "schema": { "type": "string" } }
+          ],
+          "operationId": "getResidents",
+          "responses": {
+            "200": { "description": "List of residents" },
+            "400": { "description": "Bad request" }
+          }
+        },
+        "post": {
+          "summary": "Create Resident",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Resident" }
+              }
+            }
+          },
+          "operationId": "createResident",
+          "responses": {
+            "201": { "description": "Resident created" },
+            "400": { "description": "Validation error" }
+          }
+        }
+      },
+      "/api/residents/{id}": {
+        "put": {
+          "summary": "Update Resident",
+          "operationId": "updateResident",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": { "type": "string" }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Resident" }
+              }
+            }
+          },
+          "responses": {
+            "200": { "description": "Resident updated" },
+            "400": { "description": "Invalid input" },
+            "404": { "description": "Resident not found" }
+          }
+        },
+        "delete": {
+          "summary": "Delete Resident",
+          "operationId": "deleteResident",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": { "type": "string" }
+            }
+          ],
+          "responses": {
+            "200": { "description": "Resident deleted" },
+            "404": { "description": "Resident not found" }
+          }
+        }
+      },
+      "/api/apartments": {
+        "get": {
+          "summary": "Get All Apartments",
+          "parameters": [
+            { "in": "query", "name": "page", "schema": { "type": "integer" } },
+            { "in": "query", "name": "limit", "schema": { "type": "integer" } },
+            { "in": "query", "name": "building", "schema": { "type": "string" } }
+          ],
+          "operationId": "getApartments",
+          "responses": {
+            "200": { "description": "List of apartments" },
+            "400": { "description": "Bad request" }
+          }
+        },
+        "post": {
+          "summary": "Create Apartment",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Apartment" }
+              }
+            }
+          },
+          "operationId": "createApartment",
+          "responses": {
+            "201": { "description": "Apartment created" },
+            "400": { "description": "Validation error" }
+          }
+        }
+      },
+      "/api/apartments/{id}": {
+        "get": {
+          "summary": "Get Apartment Details",
+          "operationId": "getApartmentDetails",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": { "type": "string" }
+            }
+          ],
+          "responses": {
+            "200": { "description": "Apartment details" },
+            "404": { "description": "Apartment not found" }
+          }
+        }
+      },
+      "/api/apartments/{id}/bills": {
+        "get": {
+          "summary": "Get Apartment Bills",
+          "operationId": "getApartmentBills",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": { "type": "string" }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "List of bills",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "apartment": { "type": "string" },
+                          "bills": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "title": { "type": "string" },
+                                "amountDue": { "type": "number" },
+                                "isPaid": { "type": "boolean" },
+                                "usage": { "type": "number" }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": { "description": "Apartment not found" }
+          }
+        }
+      },
+      "/api/apartments/{id}/members": {
+        "post": {
+          "summary": "Add Member to Apartment",
+          "operationId": "addMember",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": { "type": "string" }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "residentId": { "type": "string" },
+                    "role": { "type": "string", "enum": ["Chủ hộ", "Thành viên"] }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": { "description": "Member added" },
+            "400": { "description": "Validation error" },
+            "404": { "description": "Apartment or resident not found" }
+          }
+        }
+      },
+      "/api/fees": {
+        "get": {
+          "summary": "Get Fees List",
+          "parameters": [
+            { "in": "query", "name": "type", "schema": { "type": "string" } },
+            { "in": "query", "name": "limit", "schema": { "type": "integer" } }
+          ],
+          "operationId": "getFees",
+          "responses": {
+            "200": { "description": "List of fees" },
+            "400": { "description": "Bad request" }
+          }
+        },
+        "post": {
+          "summary": "Create Fee",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Fee" }
+              }
+            }
+          },
+          "operationId": "createFee",
+          "responses": {
+            "201": { "description": "Fee created" },
+            "400": { "description": "Validation error" }
+          }
+        }
+      },
+      "/api/fees/{id}": {
+        "patch": {
+          "summary": "Update Fee",
+          "operationId": "updateFee",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": { "type": "string" }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Fee" }
+              }
+            }
+          },
+          "responses": {
+            "200": { "description": "Fee updated" },
+            "400": { "description": "Validation error" },
+            "404": { "description": "Fee not found" }
+          }
+        }
+      },
+      "/api/fees/{id}/status": {
+        "get": {
+          "summary": "Get Fee Payment Status",
+          "operationId": "getFeePaymentStatus",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": { "type": "string" }
+            }
+          ],
+          "responses": {
+            "200": { "description": "Fee status" },
+            "404": { "description": "Fee not found" }
+          }
+        }
+      },
+      "/api/transactions/calculate": {
+        "post": {
+          "summary": "Calculate Fee",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["apartmentId", "feeId"],
+                  "properties": {
+                    "apartmentId": { "type": "string" },
+                    "feeId": { "type": "string" },
+                    "usage": { "type": "number" }
+                  }
+                }
+              }
+            }
+          },
+          "operationId": "calculateFee",
+          "responses": {
+            "200": { "description": "Calculation result" },
+            "400": { "description": "Validation error" },
+            "404": { "description": "Resource not found" }
+          }
+        }
+      },
+      "/api/transactions": {
+        "post": {
+          "summary": "Record Transaction",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "apartmentId": { "type": "string" },
+                    "feeId": { "type": "string" },
+                    "totalAmount": { "type": "number" },
+                    "payerName": { "type": "string" },
+                    "usage": { "type": "number" },
+                    "unitPrice": { "type": "number" }
+                  }
+                }
+              }
+            }
+          },
+          "operationId": "createTransaction",
+          "responses": {
+            "201": { "description": "Transaction recorded" },
+            "400": { "description": "Validation error" },
+            "404": { "description": "Resource not found" }
+          }
+        }
+      },
+      "/api/users": {
+        "get": {
+          "summary": "Get All Users",
+          "operationId": "getUsers",
+          "responses": {
+            "200": { "description": "List of users" },
+            "403": { "description": "Forbidden" }
+          }
+        },
+        "post": {
+          "summary": "Create User",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": { "type": "string" },
+                    "password": { "type": "string" },
+                    "role": { "type": "string", "enum": ["leader", "accountant"] }
+                  }
+                }
+              }
+            }
+          },
+          "operationId": "createUser",
+          "responses": {
+            "201": { "description": "User created" },
+            "400": { "description": "Validation error" },
+            "403": { "description": "Forbidden" }
+          }
+        }
+      },
+      "/api/users/{id}": {
+        "put": {
+          "summary": "Update User Role",
+          "operationId": "updateUser",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": { "type": "string" }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "role": { "type": "string" } }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": { "description": "User updated" },
+            "400": { "description": "Bad request" },
+            "403": { "description": "Forbidden" },
+            "404": { "description": "User not found" }
+          }
+        },
+        "delete": {
+          "summary": "Delete User",
+          "operationId": "deleteUser",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": { "type": "string" }
+            }
+          ],
+          "responses": {
+            "200": { "description": "User deleted" },
+            "403": { "description": "Forbidden" },
+            "404": { "description": "User not found" }
+          }
+        }
+      },
+      "/api/stats/dashboard": {
+        "get": {
+          "summary": "Get Dashboard Stats",
+          "operationId": "getDashboardStats",
+          "responses": {
+            "200": { "description": "Dashboard stats" },
+            "403": { "description": "Forbidden" }
+          }
+        }
+      },
+      "/api/registration-codes": {
+        "get": {
+          "summary": "List Codes",
+          "operationId": "listRegistrationCodes",
+          "responses": {
+            "200": { "description": "List of codes" },
+            "403": { "description": "Forbidden" }
+          }
+        },
+        "post": {
+          "summary": "Create Code",
+          "operationId": "createRegistrationCode",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string" },
+                    "usageLimit": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": { "description": "Code created" },
+            "400": { "description": "Validation error" },
+            "403": { "description": "Forbidden" }
+          }
+        }
+      },
+      "/api/registration-codes/{id}": {
+        "delete": {
+          "summary": "Delete Code",
+          "operationId": "deleteRegistrationCode",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": { "type": "string" }
+            }
+          ],
+          "responses": {
+            "200": { "description": "Code deleted" },
+            "403": { "description": "Forbidden" },
+            "404": { "description": "Code not found" }
+          }
+        }
+      }
+    }
+  }
+  

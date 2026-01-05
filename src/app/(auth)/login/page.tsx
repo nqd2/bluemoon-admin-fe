@@ -10,6 +10,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Card, CardTitle, CardContent, CardHeader } from "@/components/ui/card";
 
 const LoginPage = () => {
   return (
@@ -41,27 +42,55 @@ const LoginPage = () => {
             } as React.CSSProperties}
           >
             <SwiperSlide>
-              <div className="w-full h-full flex justify-center items-center">
-                <Image src={slider1} alt="image" className="" priority={true} />
+              <div className="relative w-full h-full">
+                <Image 
+                  src={slider1} 
+                  alt="image" 
+                  fill
+                  className="object-cover" 
+                  priority={true}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
               </div>
             </SwiperSlide>
             <SwiperSlide>
-              <div className="w-full h-full flex justify-center items-center">
-                <Image src={slider2} alt="image" className="" priority={true} />
+              <div className="relative w-full h-full">
+                <Image 
+                  src={slider2} 
+                  alt="image" 
+                  fill
+                  className="object-cover" 
+                  priority={true}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
               </div>
             </SwiperSlide>
             <SwiperSlide>
-              <div className="w-full h-full flex justify-center items-center">
-                <Image src={slider3} alt="image" className="" priority={true} />
+              <div className="relative w-full h-full">
+                <Image 
+                  src={slider3} 
+                  alt="image" 
+                  fill
+                  className="object-cover" 
+                  priority={true}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
               </div>
             </SwiperSlide>
           </Swiper>
 
         </div>
         <div className=" px-4  py-5 flex justify-center items-center">
-          <div className="lg:w-[480px]">
-            <LogInForm />
-          </div>
+          <Card className="w-full max-w-md p-4">
+            <CardHeader>
+              <CardTitle className="2xl:text-3xl text-2xl font-bold text-default-900">
+                Đăng nhập
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="w-full">
+              <LogInForm />
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

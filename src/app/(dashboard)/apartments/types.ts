@@ -32,12 +32,10 @@ export interface AddMemberPayload {
 export interface ApartmentListResponse {
   success: boolean;
   data: Apartment[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
   message?: string;
 }
 

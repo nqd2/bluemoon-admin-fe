@@ -75,23 +75,27 @@ export default function ResidentPageView({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-primary/10 rounded-lg">
-            <Users className="h-6 w-6 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-default-900">Quản lý Cư dân</h1>
-            <p className="text-sm text-default-500">
-              Tổng số: {pagination.total} cư dân
-            </p>
-          </div>
-        </div>
-        <Button onClick={() => setIsAddDialogOpen(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          Thêm Cư dân
-        </Button>
-      </div>
+        <Card className="mb-6">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <Users className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-default-900">Quản lý Cư dân</h1>
+                  <p className="text-sm text-default-500">
+                    Tổng số: {pagination.total} cư dân
+                  </p>
+                </div>
+              </div>
+              <Button onClick={() => setIsAddDialogOpen(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Thêm Cư dân
+              </Button>
+            </div>
+          </CardHeader>
+        </Card>
 
       {/* Search and Filter Card */}
       <Card>
