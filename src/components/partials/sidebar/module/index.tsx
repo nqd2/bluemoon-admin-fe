@@ -15,9 +15,9 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import MenuOverlayPortal from "./MenuOverlayPortal";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
+import { MenuItemProps } from "@/config/menus";
 const ModuleSidebar = ({ trans }: { trans: any }) => {
-  const menus = menusConfig?.sidebarNav?.modern || [];
+  const menus: MenuItemProps[] = menusConfig?.sidebarNav?.modern || [];
   const { subMenu, setSubmenu, collapsed, setCollapsed, sidebarBg } =
     useSidebar();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);

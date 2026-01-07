@@ -10,13 +10,13 @@ import {
 
 export interface MenuItemProps {
   title: string;
-  icon: any;
+  icon?: any;
   href?: string;
   child?: MenuItemProps[];
   megaMenu?: MenuItemProps[];
   multi_menu?: MenuItemProps[];
   nested?: MenuItemProps[];
-  onClick: () => void;
+  onClick?: () => void;
   isHeader?: boolean;
 }
 
