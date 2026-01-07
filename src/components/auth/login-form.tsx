@@ -1,6 +1,6 @@
-"use client";
+ "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -68,9 +68,9 @@ const LoginForm = () => {
       try {
         const result = await signIn("Credentials", {
           username: data.username,
-        password: data.password,
-        redirect: false,
-      });
+          password: data.password,
+          redirect: false,
+        });
 
         if (result?.error) {
           console.error("[Login Form] Login error:", result.error);
@@ -81,9 +81,9 @@ const LoginForm = () => {
           );
         } else if (result?.ok) {
           toast.success("Đăng nhập thành công! Đang chuyển hướng...");
-          
-          await new Promise(resolve => setTimeout(resolve, 100));
-          
+
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
           const params = new URLSearchParams(window.location.search);
           const callbackUrl = params.get("callbackUrl") || "/dashboard";
           window.location.href = callbackUrl;
@@ -110,48 +110,93 @@ const LoginForm = () => {
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="2xl:text-3xl text-2xl font-bold text-default-900">
-        Chào mừng bạn!
+            Chào mừng bạn!
           </CardTitle>
           <CardDescription className="2xl:text-lg text-base text-default-600 leading-6">
-        Đăng nhập để tiếp tục vào hệ thống quản trị.
+            Đăng nhập để tiếp tục vào hệ thống quản trị.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <Label
-            htmlFor="username"
-            className="mb-2 font-medium text-default-600"
-          >
-            Username <span className="text-destructive">*</span>
-          </Label>
-          <Input
-            disabled={isPending}
-            {...register("username")}
-            type="text"
-            id="username"
-            placeholder="admin123"
-            className={cn("", {
-              "border-destructive": errors.username,
-            })}
-            size={!isDesktop2xl ? "xl" : "lg"}
-          />
-          {errors.username && (
-            <p className="text-destructive text-sm mt-1">
-              {errors.username.message}
-            </p>
-          )}
-        </div>
+            <div>
+              <Label
+                htmlFor="username"
+                className="mb-2 font-medium text-default-600"
+              >
+                Username <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                disabled={isPending}
+                {...register("username")}
+                type="text"
+                id="username"
+                placeholder="admin123"
+                className={cn("", {
+                  "border-destructive": errors.username,
+                })}
+                size={!isDesktop2xl ? "xl" : "lg"}
+              />
+              {errors.username && (
+                <p className="text-destructive text-sm mt-1">
+                  {errors.username.message}
+                </p>
+              )}
+            </div>
 
             <div>
-          <Label
-            htmlFor="password"
-            className="mb-2 font-medium text-default-600"
-          >
-            Mật khẩu <span className="text-destructive">*</span>
-          </Label>
-          <div className="relative">
-            <Input
+              <Label
+                htmlFor="password"
+                className="mb-2 font-medium text-default-600"
+              >
+                Mật khẩu <span className="text-destructive">*</span>
+              </Label>
+              <div className="relative">
+                <Input
+                  disabled={isPending}
+                  {...register("password")}
+                  type={passwordType}
+                  id="password"
+                  placeholder="••••••••"
+                  className={cn("pr-10", {
+                    "border-destructive": errors.password,
+                  })}
+                  size={!isDesktop2xl ? "xl" : "lg"}
+                />
+                <button
+                  type="button"
+                  className="absolute top-1/2 -translate-y-1/2 right-4 cursor-pointer"
+                  onClick={togglePasswordType}
+                  tabIndex={-1}
+                >
+                  <Icon
+                    icon={
+                      passwordType === "password"
+                        ? "heroicons:eye"
+                        : "heroicons:eye-slash"
+                    }
+                    className="w-5 h-5 text-default-400"
+                  />
+                </button>
+              </div>
+              {errors.password && (
+                <p className="text-destructive text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+
+            <div className="flex justify-end">
+              <Link
+                href="/auth/forgot"
+                className="text-sm text-primary hover:underline"
+              >
+                Quên mật khẩu?
+              </Link>
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full mt-2"
               disabled={isPending}
               size={!isDesktop2xl ? "lg" : "md"}
             >
@@ -160,46 +205,12 @@ const LoginForm = () => {
             </Button>
           </form>
 
-          {/* Register Link */}
           <div className="mt-6 text-center text-base text-default-600">
             Chưa có tài khoản?{" "}
             <Link href="/register" className="text-primary hover:underline">
               Đăng ký
             </Link>
           </div>
-          {errors.password && (
-            <p className="text-destructive text-sm mt-1">
-              {errors.password.message}
-            </p>
-          )}
-        </div>
-
-            <div className="flex justify-end">
-          <Link
-            href="/auth/forgot"
-            className="text-sm text-primary hover:underline"
-          >
-            Quên mật khẩu?
-          </Link>
-        </div>
-
-        <Button
-          type="submit"
-              className="w-full mt-2"
-          disabled={isPending}
-          size={!isDesktop2xl ? "lg" : "md"}
-        >
-          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {isPending ? "Đang đăng nhập..." : "Đăng nhập"}
-        </Button>
-      </form>
-
-      <div className="mt-6 text-center text-base text-default-600">
-        Chưa có tài khoản?{" "}
-        <Link href="/register" className="text-primary hover:underline">
-          Đăng ký
-        </Link>
-      </div>
         </CardContent>
       </Card>
     </div>

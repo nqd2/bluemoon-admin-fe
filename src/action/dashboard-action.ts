@@ -51,7 +51,6 @@ export async function getDashboardStats(): Promise<DashboardResponse> {
     const apiData = raw.data || raw;
 
     const stats: DashboardStats = {
-    const stats: DashboardStats = {
       residents: {
         total: apiData.totalResidents ?? 0,
         permanent: apiData.totalResidents ?? 0,
