@@ -45,7 +45,6 @@ export default function MembersTable({ members }: MembersTableProps) {
                   {mem.roleInApartment}
                 </Badge>
               </TableCell>
-              {/* <TableCell>{resident?.identityCard || "-"}</TableCell> */}
               <TableCell>{mem.job || "-"}</TableCell>
               <TableCell>{mem.gender || "-"}</TableCell>
               <TableCell>

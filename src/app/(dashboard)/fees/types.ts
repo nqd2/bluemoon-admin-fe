@@ -6,7 +6,7 @@ export interface Fee {
   description?: string;
   type: FeeType;
   amount: number;
-  unit: string; // "m2", "person", "household"
+  unit: string;
   isActive?: boolean;
   createdAt?: string;
   updatedAt?: string;

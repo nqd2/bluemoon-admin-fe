@@ -39,14 +39,12 @@ const Header = ({ handleOpenSearch, trans }: { handleOpenSearch: () => void; tra
   const isDesktop = useMediaQuery("(min-width: 1280px)");
   const isMobile = useMediaQuery("(min-width: 768px)");
 
-  // set header style to classic if isDesktop
   React.useEffect(() => {
     if (!isDesktop && layout === "horizontal") {
       setSidebarType("classic");
     }
   }, [isDesktop, layout, setSidebarType]);
 
-  // if horizontal layout
   if (layout === "horizontal" && navbarType !== "hidden") {
     return (
       <ClassicHeader

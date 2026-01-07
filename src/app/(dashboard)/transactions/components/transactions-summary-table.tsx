@@ -35,7 +35,6 @@ const TransactionsSummaryTable = () => {
       const summaries: TransactionSummary[] = json.data || [];
       setData(summaries);
 
-      // Preload details for all apartments so dialog mở ra là có luôn
       if (summaries.length) {
         setDetailsLoading(true);
         try {

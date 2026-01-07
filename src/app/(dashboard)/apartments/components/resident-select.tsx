@@ -43,7 +43,6 @@ export function ResidentSelect({ value, onChange, error }: ResidentSelectProps) 
     fetchResidents();
   }, []);
 
-  // Filter residents: only show those without apartment
   const filteredResidents = React.useMemo(() => {
     return residents.filter((resident) => !resident.apartmentId);
   }, [residents]);

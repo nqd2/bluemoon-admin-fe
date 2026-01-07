@@ -21,7 +21,6 @@ interface FeeStatusViewProps {
   apartments: ApartmentStatus[];
 }
 
-// Format currency helper
 function formatVND(amount: number): string {
   return new Intl.NumberFormat("vi-VN", {
     style: "currency",
@@ -29,7 +28,6 @@ function formatVND(amount: number): string {
   }).format(amount);
 }
 
-// Format date helper
 function formatDate(dateString?: string): string {
   if (!dateString) return "-";
   const date = new Date(dateString);
@@ -50,7 +48,6 @@ export default function FeeStatusView({ feeInfo, apartments }: FeeStatusViewProp
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Button asChild variant="ghost" size="icon">
@@ -72,7 +69,6 @@ export default function FeeStatusView({ feeInfo, apartments }: FeeStatusViewProp
         </div>
       </div>
 
-      {/* Stats Card */}
       <Card>
         <CardHeader>
           <CardTitle>Tổng đã thu</CardTitle>
@@ -85,7 +81,6 @@ export default function FeeStatusView({ feeInfo, apartments }: FeeStatusViewProp
         </CardContent>
       </Card>
 
-      {/* Payment Table */}
       <Card>
         <CardHeader>
           <CardTitle>Bảng thanh toán</CardTitle>

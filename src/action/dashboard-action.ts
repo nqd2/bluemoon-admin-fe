@@ -4,7 +4,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { DashboardStats } from "@/app/(dashboard)/dashboard/types";
 
-// Re-export type for backward compatibility
 export type { DashboardStats };
 
 export interface DashboardResponse {
@@ -13,10 +12,6 @@ export interface DashboardResponse {
   message?: string;
 }
 
-/**
- * Server Action để lấy dashboard stats từ Backend
- * Endpoint: GET /api/stats/dashboard
- */
 export async function getDashboardStats(): Promise<DashboardResponse> {
   try {
     const session = await getServerSession(authOptions);
@@ -55,6 +50,7 @@ export async function getDashboardStats(): Promise<DashboardResponse> {
     const raw = await response.json();
     const apiData = raw.data || raw;
 
+    const stats: DashboardStats = {
     const stats: DashboardStats = {
       residents: {
         total: apiData.totalResidents ?? 0,

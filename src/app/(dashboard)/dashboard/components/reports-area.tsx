@@ -29,7 +29,6 @@ interface ReportsAreaProps {
   };
 }
 
-// Format currency helper
 function formatVND(amount: number): string {
   return new Intl.NumberFormat("vi-VN", {
     style: "currency",

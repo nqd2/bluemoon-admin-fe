@@ -1,4 +1,4 @@
-"use client"; // Error components must be Client Components
+"use client";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Info } from "lucide-react";
 

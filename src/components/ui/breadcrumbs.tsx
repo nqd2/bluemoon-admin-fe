@@ -115,7 +115,7 @@ const Breadcrumbs = React.forwardRef<HTMLOListElement, BreadcrumbsProps>(
       );
       visibleItems = [
         ...breadcrumbItems.slice(0, visibleBefore),
-        null, // Placeholder for ellipsis
+        null,
         ...breadcrumbItems.slice(totalItems - visibleAfter),
       ];
     }

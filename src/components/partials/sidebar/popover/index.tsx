@@ -92,49 +92,51 @@ const PopoverSidebar = ({ trans }: { trans: string }) => {
             " space-y-2 text-center": collapsed,
           })}
         >
-          {menus.map((item, i) => (
-            <li key={`menu_key_${i}`}>
-              {/* single menu  */}
+          {menus.map((rawItem: any, i: number) => {
+            const item = rawItem as any;
+            const hasChild = Array.isArray(item.child);
+            const isHeader = !!item.isHeader;
 
-              {!item.child && !item.isHeader && (
-                <SingleMenuItem
-                  item={item}
-                  collapsed={collapsed}
-                  trans={trans}
-                />
-              )}
-
-              {/* menu label */}
-              {item.isHeader && !item.child && !collapsed && (
-                <MenuLabel item={item} trans={trans} />
-              )}
-
-              {/* sub menu */}
-              {item.child && (
-                <>
-                  <SubMenuHandler
+            return (
+              <li key={`menu_key_${i}`}>
+                {!hasChild && !isHeader && (
+                  <SingleMenuItem
                     item={item}
-                    toggleSubmenu={toggleSubmenu}
-                    index={i}
-                    activeSubmenu={activeSubmenu}
                     collapsed={collapsed}
-                    menuTitle={item.title}
                     trans={trans}
                   />
-                  {!collapsed && (
-                    <NestedSubMenu
-                      toggleMultiMenu={toggleMultiMenu}
-                      activeMultiMenu={activeMultiMenu}
-                      activeSubmenu={activeSubmenu}
+                )}
+
+                {isHeader && !hasChild && !collapsed && (
+                  <MenuLabel item={item} trans={trans} />
+                )}
+
+                {hasChild && (
+                  <>
+                    <SubMenuHandler
                       item={item}
+                      toggleSubmenu={toggleSubmenu}
                       index={i}
+                      activeSubmenu={activeSubmenu}
+                      collapsed={collapsed}
+                      menuTitle={item.title}
                       trans={trans}
                     />
-                  )}
-                </>
-              )}
-            </li>
-          ))}
+                    {!collapsed && (
+                      <NestedSubMenu
+                        toggleMultiMenu={toggleMultiMenu}
+                        activeMultiMenu={activeMultiMenu}
+                        activeSubmenu={activeSubmenu}
+                        item={item}
+                        index={i}
+                        trans={trans}
+                      />
+                    )}
+                  </>
+                )}
+              </li>
+            );
+          })}
         </ul>
         {!collapsed && (
           <div className="-mx-2 ">

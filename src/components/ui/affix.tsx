@@ -32,7 +32,7 @@ const Affix = ({ children, offsetTop, target }: AffixProps) => {
     position: isFixed ? "fixed" : "static",
     top: isFixed ? offsetTop + "px" : "auto",
     width: "100%",
-    zIndex: 1000, // adjust z-index as needed
+    zIndex: 1000,
   };
 
   return (
@@ -40,7 +40,6 @@ const Affix = ({ children, offsetTop, target }: AffixProps) => {
       ref={containerRef}
       style={{ height: "300px", margin: "20px", width: "200px" }}
     >
-      {/* Add a placeholder div with the same height as the affixed element */}
       {isFixed && <div style={{ height: "50px" }}></div>}
       <div ref={ref} style={affixStyles}>
         {children}

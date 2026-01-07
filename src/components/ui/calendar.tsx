@@ -29,8 +29,6 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         row: "flex w-full gap-1 mt-2",
         cell: "flex-1 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-primary [&:has([aria-selected])]:rounded-md focus-within:relative focus-within:z-20",
 
-        // first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md
-
         day: "w-full h-10 rounded  p-0 font-normal aria-selected:opacity-100 bg-transparent text-current hover:text-primary",
 
         day_selected:

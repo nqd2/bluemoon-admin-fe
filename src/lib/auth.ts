@@ -50,22 +50,19 @@ export const authOptions: AuthOptions = {
 
           const responseData: BackendResponse = await res.json();
 
-          // Kiểm tra response thành công (200) VÀ cờ success: true VÀ có user và token
           if (res.ok && responseData.success && responseData.user && responseData.token) {
-            // Nếu thành công, return đối tượng user
             return {
               id: responseData.user._id,
               name: responseData.user.username,
-              email: credentials.username, // Backend không trả về email, ta dùng lại từ form
-              role: responseData.user.role, // Thêm role
-              accessToken: responseData.token, // Token JWT từ backend (ở root level)
+              email: credentials.username,
+              role: responseData.user.role,
+              accessToken: responseData.token,
             };
           } else {
-            // Ném lỗi với message từ backend
             throw new Error(responseData.message || "Username hoặc mật khẩu không đúng");
           }
         } catch (error: any) {
-          // Nếu là lỗi network hoặc parse JSON
+
           if (error.name === 'TypeError' || error.message.includes('fetch')) {
             throw new Error("Không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
           }
@@ -85,7 +82,7 @@ export const authOptions: AuthOptions = {
   
   session: {
     strategy: "jwt",
-    maxAge: 2 * 24 * 60 * 60, // 2 days mặc định
+    maxAge: 2 * 24 * 60 * 60,
   },
 
   callbacks: {
@@ -95,30 +92,30 @@ export const authOptions: AuthOptions = {
         token.accessToken = adminUser.accessToken;
         token.id = adminUser.id;
         token.role = adminUser.role;
-        // Lưu thời điểm đăng nhập để kiểm tra session duration
+
         token.loginTime = Date.now();
       }
       
-      // Kiểm tra thời gian hết hạn của session dựa trên role
+
       if (token.loginTime) {
         const now = Date.now();
         const role = token.role as string;
         
-        // admin: 2 ngày (48 giờ), các user khác: 1 giờ
+
         const sessionDuration = role === 'admin' 
-          ? 2 * 24 * 60 * 60 * 1000  // 2 days
-          : 60 * 60 * 1000;           // 1 hour
+          ? 2 * 24 * 60 * 60 * 1000
+          : 60 * 60 * 1000;
         
         const expiredTime = token.loginTime as number + sessionDuration;
         
-        // Đánh dấu token đã hết hạn
+
         token.isExpired = now > expiredTime;
       }
       
       return token;
     },
     async session({ session, token }) {
-      // Nếu token đã hết hạn, không trả về session
+
       if ((token as any).isExpired) {
         return null as any;
       }
