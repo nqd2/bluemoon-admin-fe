@@ -3,7 +3,6 @@
 import axios from 'axios';
 import { PaginatedBankLogResponse } from '@/lib/types/statement.types';
 
-// Lấy backend URL từ env, mặc định là localhost:3001 (port của cns-admin-api)
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3001';
 
 // Tạo axios instance riêng cho backend API
@@ -70,11 +69,6 @@ export const getStatementHistory = async (
     
     // Kiểm tra lỗi kết nối
     if (error.code === 'ECONNREFUSED') {
-      console.error(`[Statement API] ❌ Không thể kết nối backend tại: ${BACKEND_URL}`);
-      console.error('[Statement API] 💡 Hãy kiểm tra:');
-      console.error('   1. Backend có đang chạy tại port 3001 không?');
-      console.error('   2. NEXT_PUBLIC_BACKEND_URL có đúng không?');
-      console.error('   3. Thử chạy: cd ../cns-admin-api && npm start');
     }
     
     // Trả về cấu trúc lỗi để trang không bị crash

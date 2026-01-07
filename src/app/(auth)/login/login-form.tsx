@@ -63,7 +63,7 @@ const LoginForm = () => {
           toast({
             title: "Đăng nhập thất bại",
             description: "Sai thông tin đăng nhập",
-            variant: "destructive",
+            color: "destructive",
           });
         } else if (result?.ok) {
           toast({
@@ -80,7 +80,7 @@ const LoginForm = () => {
           description: isNetworkError 
             ? "Lỗi hệ thống, vui lòng thử lại"
             : "Lỗi hệ thống, vui lòng thử lại",
-          variant: "destructive",
+          color: "destructive",
         });
       }
     });
@@ -90,7 +90,7 @@ const LoginForm = () => {
     <div className="w-full py-10">
       <div className="flex items-center justify-center gap-3 mb-6">
         <h1 className="text-2xl font-bold text-default-900">
-          Hệ thống quản trị CNS
+          Hệ thống quản lý BlueMoon
         </h1>
       </div>
 

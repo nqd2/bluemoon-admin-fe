@@ -15,7 +15,7 @@ const RegisterPage = () => {
         style={{
           backgroundImage: "url('/background.png')",
           backgroundSize: "100% auto",
-          backgroundPosition: "top center",
+          backgroundPosition: "center bottom",
           backgroundRepeat: "no-repeat",
         }}
       />
@@ -33,10 +33,8 @@ const RegisterPage = () => {
           />
         </div>
 
-        {/* Register Card */}
-        <div className="bg-card w-full rounded-lg shadow-lg p-6 md:p-8 border border-border">
-          <RegisterForm />
-        </div>
+        {/* Register Form */}
+        <RegisterForm />
       </div>
     </div>
   );

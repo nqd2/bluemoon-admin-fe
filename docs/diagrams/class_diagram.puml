@@ -16,6 +16,7 @@ class Resident {
   +ObjectId apartmentId
   +String roleInApartment
   +String phone
+  +String residencyStatus
 }
 
 class Apartment {
@@ -43,6 +44,8 @@ class Transaction {
   +String payerName
   +ObjectId createdBy
   +Date date
+  +Number usage
+  +Number unitPrice
 }
 
 class RegistrationCode {

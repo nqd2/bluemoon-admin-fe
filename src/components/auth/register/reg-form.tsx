@@ -13,6 +13,13 @@ import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { SiteLogo } from "@/components/svg";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -107,20 +114,22 @@ const RegisterForm = () => {
   return (
     <div className="w-full py-5">
       {/* Logo */}
-      <Link href="/" className="inline-block">
+      <Link href="/" className="inline-block mb-4">
         <SiteLogo className="h-10 w-10 2xl:w-14 2xl:h-14 text-primary" />
       </Link>
 
-      {/* Header */}
-      <div className="2xl:mt-8 mt-6 2xl:text-3xl text-2xl font-bold text-default-900">
-        Tạo tài khoản mới
-      </div>
-      <div className="2xl:text-lg text-base text-default-600 2xl:mt-2 leading-6">
-        Vui lòng nhập mã đăng ký được cung cấp bởi quản trị viên.
-      </div>
-
-      {/* Register Form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-5 2xl:mt-7 space-y-4">
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="2xl:text-3xl text-2xl font-bold text-default-900">
+            Tạo tài khoản mới
+          </CardTitle>
+          <CardDescription className="2xl:text-lg text-base text-default-600 leading-6">
+            Vui lòng nhập mã đăng ký được cung cấp bởi quản trị viên.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {/* Register Form */}
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Registration Code Field */}
         <div>
           <Label htmlFor="code" className="mb-2 font-medium text-default-600">
@@ -248,13 +257,15 @@ const RegisterForm = () => {
         </Button>
       </form>
 
-      {/* Login Link */}
-      <div className="mt-6 text-center text-base text-default-600">
-        Đã có tài khoản?{" "}
-        <Link href="/login" className="text-primary hover:underline">
-          Đăng nhập
-        </Link>
-      </div>
+          {/* Login Link */}
+          <div className="mt-6 text-center text-base text-default-600">
+            Đã có tài khoản?{" "}
+            <Link href="/login" className="text-primary hover:underline">
+              Đăng nhập
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

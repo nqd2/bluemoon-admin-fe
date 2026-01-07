@@ -16,6 +16,7 @@ rectangle "Hệ Thống Quản Lý Chung Cư BlueMoon" {
   usecase "Quản Lý Nhân Khẩu" as UC_Manage_Residents
   usecase "Quản Lý Hộ Khẩu" as UC_Manage_Apartments
   usecase "Xem Danh Sách Nhân Khẩu/Hộ Khẩu" as UC_View_Residents_Apartments
+  usecase "Xem Hóa Đơn Hàng Tháng" as UC_View_Bills
 
   ' Fees & Transactions
   usecase "Quản Lý Khoản Thu (Fees)" as UC_Manage_Fees
@@ -35,10 +36,13 @@ Admin --> UC_Manage_Fees
 Admin --> UC_Create_Transactions
 Admin --> UC_View_Stats
 
+Admin --> UC_View_Bills
+
 Leader --> UC_Login
 Leader --> UC_Manage_Residents
 Leader --> UC_Manage_Apartments
 Leader --> UC_View_Residents_Apartments
+Leader --> UC_View_Bills
 
 Accountant --> UC_Login
 Accountant --> UC_Manage_Fees

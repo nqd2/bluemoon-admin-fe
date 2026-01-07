@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Search, Loader2, Users } from "lucide-react";
+import { Plus, Search, Loader2, Users, Download } from "lucide-react";
 import ResidentTable from "./components/resident-table";
 import ResidentFormDialog from "./components/resident-form-dialog";
 import ResidentPagination from "./components/resident-pagination";
@@ -72,26 +72,58 @@ export default function ResidentPageView({
     handleRefresh();
   };
 
+  const handleExportExcel = async () => {
+    try {
+      const res = await fetch("/api/export/residents");
+      if (!res.ok) throw new Error("Export failed");
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "danh_sach_cu_dan.xlsx";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Export residents excel error:", error);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-primary/10 rounded-lg">
-            <Users className="h-6 w-6 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-default-900">Quản lý Cư dân</h1>
-            <p className="text-sm text-default-500">
-              Tổng số: {pagination.total} cư dân
-            </p>
-          </div>
-        </div>
-        <Button onClick={() => setIsAddDialogOpen(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          Thêm Cư dân
-        </Button>
-      </div>
+        <Card className="mb-6">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <Users className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-default-900">Quản lý Cư dân</h1>
+                  <p className="text-sm text-default-500">
+                    Tổng số: {pagination.total} cư dân
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={handleExportExcel}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Xuất Excel
+                </Button>
+                <Button onClick={() => setIsAddDialogOpen(true)}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Thêm Cư dân
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+        </Card>
 
       {/* Search and Filter Card */}
       <Card>
