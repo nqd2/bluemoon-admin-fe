@@ -54,8 +54,6 @@ const alertVariants = cva(
         color: "secondary",
         className: " text-default-700 dark:text-default-400  bg-transparent ",
       },
-      // soft 
-
       {
         variant: "soft",
         color: "info",
@@ -86,11 +84,6 @@ const alertVariants = cva(
         color: "secondary",
         className: "text-card-foreground bg-opacity-40",
       },
-
-
-
-
-
     ],
     defaultVariants: {
       color: "default",
@@ -98,10 +91,8 @@ const alertVariants = cva(
   }
 );
 
-// Define interface for variant props
 interface AlertVariantProps extends VariantProps<typeof alertVariants> { }
 
-// Define interface for remaining HTML attributes
 interface AlertHTMLProps extends React.HTMLAttributes<HTMLDivElement> {
   dismissible?: boolean;
   onDismiss?: () => void;
@@ -109,7 +100,6 @@ interface AlertHTMLProps extends React.HTMLAttributes<HTMLDivElement> {
 
 }
 
-// Merge both interfaces to create final AlertProps
 type AlertProps = AlertVariantProps & AlertHTMLProps;
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(

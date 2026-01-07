@@ -138,9 +138,6 @@ export async function getApartmentTransactions(
   }
 }
 
-/**
- * Tính toán số tiền cần đóng cho một căn hộ và khoản thu
- */
 export async function calculateTransaction(
   payload: CalculateTransactionPayload
 ): Promise<ActionResponse<CalculateTransactionResponse>> {
@@ -199,9 +196,6 @@ export async function calculateTransaction(
   }
 }
 
-/**
- * Ghi nhận giao dịch thanh toán
- */
 export async function createTransaction(
   payload: CreateTransactionPayload
 ): Promise<ActionResponse<Transaction>> {

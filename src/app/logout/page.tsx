@@ -6,7 +6,6 @@ import { Loader2 } from "lucide-react";
 
 export default function LogoutPage() {
   useEffect(() => {
-    // Đăng xuất và chuyển về trang đăng nhập
     signOut({ callbackUrl: "/login" });
   }, []);
 

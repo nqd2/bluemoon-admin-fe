@@ -35,7 +35,6 @@ export async function GET(request: NextRequest) {
       data: result.data?.residents || [],
     });
     
-    // Add cache headers để browser có thể cache response
     response.headers.set('Cache-Control', 'private, max-age=60, stale-while-revalidate=300');
     
     return response;

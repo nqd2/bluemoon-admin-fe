@@ -1,9 +1,5 @@
 import React, { CSSProperties, useEffect, useState } from "react";
 
-/**
- * generate svg string for watermark
- */
-
 interface SvgOptions {
   text: string;
   textColor: string;
@@ -116,8 +112,6 @@ const Watermark = ({
         </svg>
       `;
       const convertedSvg = encodeURIComponent(gutteredSvg);
-      // .replace(/'/g, "%27")
-      // .replace(/"/g, "%22");
       setBackgroundImage(`url(${image})`);
     } else {
       const svg = generateSvg({

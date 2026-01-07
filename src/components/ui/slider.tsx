@@ -80,9 +80,6 @@ const Slider = React.forwardRef<
     const { max = 100, min = 0 } = props;
     const steps = showSteps ? Math.floor((max - min) / step) + 1 : 0;
     const value = props.value || props.defaultValue;
-    // step props
-
-    // tooltip value
     const [mappedValues, setMappedValues] = React.useState(() =>
       props.defaultValue !== undefined
         ? [Math.round(props.defaultValue[0] ?? 0)]

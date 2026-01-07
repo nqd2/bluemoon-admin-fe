@@ -7,7 +7,6 @@ export const dynamic = "force-dynamic";
 
 type SearchParams = { [key: string]: string | string[] | undefined };
 
-// Loading component
 function LoadingState() {
   return (
     <div className="flex items-center justify-center min-h-[400px]">

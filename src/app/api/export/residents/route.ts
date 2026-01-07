@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-// @ts-ignore - exceljs types không hoàn toàn tương thích với cấu hình hiện tại
 import ExcelJS from "exceljs";
 import path from "path";
 

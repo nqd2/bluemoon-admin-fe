@@ -29,7 +29,6 @@ export default function ApartmentDetailView({ apartment }: ApartmentDetailViewPr
       </Button>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Info Card */}
         <Card className="lg:col-span-1">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -61,7 +60,6 @@ export default function ApartmentDetailView({ apartment }: ApartmentDetailViewPr
           </CardContent>
         </Card>
 
-        {/* Members List */}
         <Card className="lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Danh sách thành viên</CardTitle>

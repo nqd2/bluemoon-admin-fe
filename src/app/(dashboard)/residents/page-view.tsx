@@ -39,7 +39,6 @@ export default function ResidentPageView({
     totalPages: initialData?.pages || 1,
   };
 
-  // Update search term when URL changes
   useEffect(() => {
     setSearchTerm(searchKeyword);
   }, [searchKeyword]);
@@ -53,9 +52,7 @@ export default function ResidentPageView({
       } else {
         params.delete("keyword");
       }
-      params.set("page", "1"); // Reset to first page on search
-      // limit is already preserving in searchParams or we can rely on prop
-      // Using searchParams.toString() copies existing params including limit
+      params.set("page", "1");
       
       router.push(`/residents?${params.toString()}`);
     });
@@ -92,7 +89,6 @@ export default function ResidentPageView({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
         <Card className="mb-6">
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
@@ -125,7 +121,6 @@ export default function ResidentPageView({
           </CardHeader>
         </Card>
 
-      {/* Search and Filter Card */}
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="text-lg">Tìm kiếm</CardTitle>
@@ -167,7 +162,6 @@ export default function ResidentPageView({
         </CardContent>
       </Card>
 
-      {/* Table Card */}
       <Card>
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
@@ -187,7 +181,6 @@ export default function ResidentPageView({
         </CardContent>
       </Card>
 
-      {/* Add Dialog */}
       <ResidentFormDialog
         open={isAddDialogOpen}
         onOpenChange={setIsAddDialogOpen}

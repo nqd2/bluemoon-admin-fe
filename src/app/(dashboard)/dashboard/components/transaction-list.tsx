@@ -21,7 +21,6 @@ interface TransactionListProps {
   transactions: Transaction[];
 }
 
-// Format currency helper
 function formatVND(amount: number): string {
   return new Intl.NumberFormat("vi-VN", {
     style: "currency",
@@ -29,7 +28,6 @@ function formatVND(amount: number): string {
   }).format(amount);
 }
 
-// Format date helper
 function formatDate(dateString: string): string {
   try {
     const date = new Date(dateString);

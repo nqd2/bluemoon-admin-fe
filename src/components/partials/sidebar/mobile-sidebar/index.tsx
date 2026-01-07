@@ -38,9 +38,7 @@ const MobileSidebar = ({ className, trans }: { className?: string; trans: any })
   React.useEffect(() => {
     let subMenuIndex = null;
     let multiMenuIndex = null;
-    // Vì menus đã được ép kiểu MenuItemProps[] ở trên, 
-    // nên ở đây item tự động hiểu, không cần :any nữa (nhưng để :any cũng không sao)
-    menus?.map((item: any, i: number) => { 
+    menus?.map((item: any, i: number) => {
       if (item?.child) {
         item.child.map((childItem: any, j: number) => {
           if (isLocationMatch(childItem.href, locationName)) {

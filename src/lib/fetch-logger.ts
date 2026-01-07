@@ -3,8 +3,6 @@ const isDev = process.env.NODE_ENV === "test";
 
 if (isDev) {
   const globalAny = global as any;
-
-  // Prevent double patching during hot reloads
   if (!globalAny.__FETCH_LOGGING_PATCHED__) {
     const originalFetch = global.fetch;
 
@@ -16,9 +14,6 @@ if (isDev) {
 
       try {
         const response = await originalFetch(input, init);
-
-        // Only log body for non-stream responses or if safely cloneable
-        // Note: response.clone() buffers the body. Large downloads might be affected.
         try {
           const clone = response.clone();
           const text = await clone.text();
@@ -26,10 +21,8 @@ if (isDev) {
           let bodyDisplay = text;
           try {
             const json = JSON.parse(text);
-            // Limit depth/size for readability if needed, or just log full object
             bodyDisplay = json;
           } catch {
-            // Truncate long text
             if (text.length > 2000) {
               bodyDisplay = text.substring(0, 2000) + "... (truncated)";
             }
@@ -39,7 +32,6 @@ if (isDev) {
           console.log(`${statusColor}   ⬇️ [${response.status}] ${url}\x1b[0m`);
           
           if (bodyDisplay) {
-             // Use console.dir to print objects nicely in terminal
              console.dir(bodyDisplay, { depth: null, colors: true });
           }
 

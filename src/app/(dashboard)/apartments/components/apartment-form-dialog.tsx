@@ -36,7 +36,7 @@ export default function ApartmentFormDialog({
     name: "",
     apartmentNumber: "",
     building: "",
-    area: "", // keep string for input, parse later
+    area: "",
     description: "",
   });
 
@@ -78,7 +78,6 @@ export default function ApartmentFormDialog({
         onSuccess?.();
       } else {
         toast.error(result.message || "Có lỗi xảy ra");
-        // Handle server errors mapping if standard format
       }
     } catch (error) {
       toast.error("Lỗi kết nối");

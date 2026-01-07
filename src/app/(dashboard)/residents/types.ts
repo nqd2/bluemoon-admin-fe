@@ -1,8 +1,8 @@
-// Resident type định nghĩa cấu trúc dữ liệu Nhân khẩu
+
 export interface Resident {
   _id: string;
   fullName: string;
-  dob: string; // ISO date string
+  dob: string;
   gender: "Nam" | "Nữ" | "Khác";
   identityCard: string;
   hometown?: string;
@@ -18,7 +18,6 @@ export interface Resident {
   updatedAt?: string;
 }
 
-// Request payload cho việc tạo mới resident
 export interface CreateResidentPayload {
   fullName: string;
   dob: string;
@@ -29,13 +28,11 @@ export interface CreateResidentPayload {
   apartmentId?: string;
 }
 
-// Request payload cho việc cập nhật resident
 export interface UpdateResidentPayload extends Partial<CreateResidentPayload> {
   residencyStatus?: string;
   apartmentId?: string;
 }
 
-// Response từ API list residents
 export interface ResidentListResponse {
   residents: Resident[];
   page: number;
@@ -43,7 +40,6 @@ export interface ResidentListResponse {
   total: number;
 }
 
-// Response từ API single resident
 export interface ResidentResponse {
   success: boolean;
   data?: Resident;
