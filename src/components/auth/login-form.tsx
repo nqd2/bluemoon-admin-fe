@@ -153,30 +153,19 @@ const LoginForm = () => {
           <div className="relative">
             <Input
               disabled={isPending}
-              {...register("password")}
-              type={passwordType}
-              id="password"
-              placeholder="••••••••"
-              className={cn("pr-10", {
-                "border-destructive": errors.password,
-              })}
-              size={!isDesktop2xl ? "xl" : "lg"}
-            />
-            <button
-              type="button"
-              className="absolute top-1/2 -translate-y-1/2 right-4 cursor-pointer"
-              onClick={togglePasswordType}
-              tabIndex={-1}
+              size={!isDesktop2xl ? "lg" : "md"}
             >
-                <Icon
-                icon={
-                  passwordType === "password"
-                    ? "heroicons:eye"
-                    : "heroicons:eye-slash"
-                }
-                  className="w-5 h-5 text-default-400"
-                />
-            </button>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isPending ? "Đang đăng nhập..." : "Đăng nhập"}
+            </Button>
+          </form>
+
+          {/* Register Link */}
+          <div className="mt-6 text-center text-base text-default-600">
+            Chưa có tài khoản?{" "}
+            <Link href="/register" className="text-primary hover:underline">
+              Đăng ký
+            </Link>
           </div>
           {errors.password && (
             <p className="text-destructive text-sm mt-1">
