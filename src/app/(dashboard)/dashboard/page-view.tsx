@@ -10,7 +10,6 @@ interface DashboardPageViewProps {
 }
 
 const DashboardPageView = ({ stats }: DashboardPageViewProps) => {
-  // Use recent transactions directly
   const recentTransactions = stats?.transactions?.recent || [];
 
   return (
@@ -28,9 +27,7 @@ const DashboardPageView = ({ stats }: DashboardPageViewProps) => {
       </div>
 
       <div className="grid grid-cols-12 gap-6">
-        {/* Main Content */}
         <div className="col-span-12 space-y-6">
-          {/* Reaction List - Full Width */}
           <div className="grid grid-cols-1 gap-6">
             <TransactionList
               title="Giao dịch gần đây"

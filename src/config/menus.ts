@@ -5,18 +5,18 @@ import {
   Files,
   Graph,
   Sheild,
-  Error,
+  UserSign,
 } from "@/components/svg";
 
 export interface MenuItemProps {
   title: string;
-  icon: any;
+  icon?: any;
   href?: string;
   child?: MenuItemProps[];
   megaMenu?: MenuItemProps[];
   multi_menu?: MenuItemProps[];
   nested?: MenuItemProps[];
-  onClick: () => void;
+  onClick?: () => void;
   isHeader?: boolean;
 }
 
@@ -61,26 +61,9 @@ export const menusConfig = {
         href: "/registration-codes",
       },
       {
-        title: "Error Pages",
-        icon: Error,
-        child: [
-          {
-            title: "Error 401",
-            href: "/error-page/401",
-          },
-          {
-            title: "Error 403",
-            href: "/error-page/403",
-          },
-          {
-            title: "Error 404",
-            href: "/error-page/404",
-          },
-          {
-            title: "Error 500",
-            href: "/error-page/500",
-          },
-        ],
+        title: "Đăng xuất",
+        icon: UserSign,
+        href: "/logout",
       },
     ],
     classic: [
@@ -127,26 +110,9 @@ export const menusConfig = {
         href: "/registration-codes",
       },
       {
-        title: "Error Pages",
-        icon: Error,
-        child: [
-          {
-            title: "Error 401",
-            href: "/error-page/401",
-          },
-          {
-            title: "Error 403",
-            href: "/error-page/403",
-          },
-          {
-            title: "Error 404",
-            href: "/error-page/404",
-          },
-          {
-            title: "Error 500",
-            href: "/error-page/500",
-          },
-        ],
+        title: "Đăng xuất",
+        icon: UserSign,
+        href: "/logout",
       },
     ],
   },

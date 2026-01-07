@@ -100,7 +100,6 @@ const VerticalHeader: React.FC<VerticalHeaderProps> = ({ handleOpenSearch }) => 
     LogoContent = MainLogo;
   }
 
-  // menu bar content condition
   if (isDesktop && sidebarType !== "module") {
     menuBarContent = (
       <MenuBar collapsed={collapsed} setCollapsed={setCollapsed} />

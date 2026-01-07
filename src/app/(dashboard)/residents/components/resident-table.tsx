@@ -117,10 +117,8 @@ export default function ResidentTable({ residents, onRefresh }: ResidentTablePro
         <TableHeader>
           <TableRow className="bg-default-100">
             <TableHead>Họ tên</TableHead>
-            {/* <TableHead>CCCD/CMND</TableHead> */}
             <TableHead>Giới tính</TableHead>
             <TableHead>Ngày sinh</TableHead>
-            {/* <TableHead>Nghề nghiệp</TableHead> */}
             <TableHead>Căn hộ</TableHead>
             <TableHead>Vai trò</TableHead>
             <TableHead>Trạng thái</TableHead>
@@ -131,10 +129,8 @@ export default function ResidentTable({ residents, onRefresh }: ResidentTablePro
           {residents.map((resident) => (
             <TableRow key={resident._id}>
               <TableCell className="font-medium">{resident.fullName}</TableCell>
-              {/* <TableCell>{resident.identityCard}</TableCell> */}
               <TableCell>{getGenderBadge(resident.gender)}</TableCell>
               <TableCell>{formatDate(resident.dob)}</TableCell>
-              {/* <TableCell>{resident.job || "-"}</TableCell> */}
               <TableCell>
                 {resident.apartmentId 
                   ? `${resident.apartmentId.building} - ${resident.apartmentId.apartmentNumber}`
@@ -167,7 +163,6 @@ export default function ResidentTable({ residents, onRefresh }: ResidentTablePro
         </TableBody>
       </Table>
 
-      {/* Edit Dialog */}
       <ResidentFormDialog
         open={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
@@ -175,7 +170,6 @@ export default function ResidentTable({ residents, onRefresh }: ResidentTablePro
         onSuccess={handleEditSuccess}
       />
 
-      {/* Delete Confirmation Dialog */}
       <DeleteConfirmationDialog
         open={isDeleteDialogOpen}
         onClose={() => {

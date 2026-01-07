@@ -8,6 +8,7 @@ import type {
   FeeListResponse,
   FeeResponse,
   FeeStatusResponse,
+  ApartmentStatus,
 } from "@/app/(dashboard)/fees/types";
 
 async function getAccessToken(): Promise<string | null> {
@@ -144,9 +145,38 @@ export async function getFeeStatus(id: string): Promise<FeeStatusResponse> {
       };
     }
 
+    const api = data;
+
+    const feeInfo: Fee = {
+      _id: id,
+      title: api.feeInfo?.title || "Khoản thu",
+      description: "",
+      type: "Service",
+      amount: 0,
+      unit: "",
+      isActive: true,
+      createdAt: undefined,
+      updatedAt: undefined,
+    };
+
+    const apartments: ApartmentStatus[] = Array.isArray(api.apartments)
+      ? api.apartments.map((apt: any) => ({
+          apartmentId: apt.apartmentId,
+          apartmentName: apt.name,
+          ownerName: apt.ownerName,
+          status: apt.status,
+          paidAmount: apt.paidAmount,
+          paidDate: apt.paidDate,
+          transactionId: apt.transactionId,
+        }))
+      : [];
+
     return {
       success: true,
-      data: data.data,
+      data: {
+        feeInfo,
+        apartments,
+      },
     };
   } catch (error) {
     console.error("Get fee status error:", error);

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { cn, isLocationMatch } from "@/lib/utils";
 import { useSidebar } from "@/store";
 import SidebarLogo from "../common/logo";
-import { menusConfig } from "@/config/menus";
+import { MenuItemProps, menusConfig } from "@/config/menus";
 import MenuLabel from "../common/menu-label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { usePathname } from "next/navigation";
@@ -11,10 +11,11 @@ import SingleMenuItem from "./single-menu-item";
 import SubMenuHandler from "./sub-menu-handler";
 import NestedSubMenu from "../common/nested-menus";
 
-const MobileSidebar = ({ className, trans }: { className?: string, trans: any }) => {
+const MobileSidebar = ({ className, trans }: { className?: string; trans: any }) => {
   const { sidebarBg, mobileMenu, setMobileMenu, collapsed } = useSidebar();
   const [activeSubmenu, setActiveSubmenu] = useState<number | null>(null);
   const [activeMultiMenu, setMultiMenu] = useState<number | null>(null);
+  
   const menus = menusConfig?.sidebarNav?.classic || [];
 
   const toggleSubmenu = (i: number) => {
@@ -75,7 +76,7 @@ const MobileSidebar = ({ className, trans }: { className?: string, trans: any })
       >
         {sidebarBg !== "none" && (
           <div
-            className=" absolute left-0 top-0   z-[-1] w-full h-full bg-cover bg-center opacity-[0.07]"
+            className=" absolute left-0 top-0  z-[-1] w-full h-full bg-cover bg-center opacity-[0.07]"
             style={{ backgroundImage: `url(${sidebarBg})` }}
           ></div>
         )}
@@ -90,42 +91,47 @@ const MobileSidebar = ({ className, trans }: { className?: string, trans: any })
               " space-y-2 text-center": collapsed,
             })}
           >
-            {menus.map((item, i) => (
-              <li key={`menu_key_${i}`}>
-                {/* single menu  */}
+            {menus.map((rawItem: any, i: number) => {
+              const item = rawItem as MenuItemProps;
+              const hasChild = Array.isArray(item.child);
+              const isHeader = !!item.isHeader;
 
-                {!item.child && !item.isHeader && (
-                  <SingleMenuItem item={item} collapsed={collapsed} />
-                )}
+              return (
+                <li key={`menu_key_${i}`}>
+                  {!hasChild && !isHeader && (
+                    <SingleMenuItem item={item} collapsed={collapsed} />
+                  )}
 
-                {/* menu label */}
-                {item.isHeader && !item.child && !collapsed && (
-                  <MenuLabel item={item} trans={trans} />
-                )}
+                  {isHeader && !hasChild && !collapsed && (
+                    <MenuLabel item={item} trans={trans} />
+                  )}
 
-                {/* sub menu */}
-                {item.child && (
-                  <>
-                    <SubMenuHandler
-                      item={item}
-                      toggleSubmenu={toggleSubmenu}
-                      index={i}
-                      activeSubmenu={activeSubmenu}
-                      collapsed={collapsed}
-                    />
-
-                    {!collapsed && (
-                      <NestedSubMenu
-                        toggleMultiMenu={toggleMultiMenu}
-                        activeMultiMenu={activeMultiMenu}
-                        activeSubmenu={activeSubmenu}
+                  {hasChild && (
+                    <>
+                      <SubMenuHandler
                         item={item}
-                        index={i} title={""} trans={undefined} />
-                    )}
-                  </>
-                )}
-              </li>
-            ))}
+                        toggleSubmenu={toggleSubmenu}
+                        index={i}
+                        activeSubmenu={activeSubmenu}
+                        collapsed={collapsed}
+                      />
+
+                      {!collapsed && (
+                        <NestedSubMenu
+                          toggleMultiMenu={toggleMultiMenu}
+                          activeMultiMenu={activeMultiMenu}
+                          activeSubmenu={activeSubmenu}
+                          item={item}
+                          index={i}
+                          title={item.title}
+                          trans={trans}
+                        />
+                      )}
+                    </>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </ScrollArea>
       </div>

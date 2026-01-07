@@ -54,7 +54,6 @@ export default function ResidentPagination({
     router.push(`${basePath}?${params.toString()}`);
   };
 
-  // Generate page numbers to display
   const getPageNumbers = () => {
     const pages: (number | "ellipsis")[] = [];
     const showPages = 5;

@@ -28,7 +28,7 @@ import type { Apartment } from "@/app/(dashboard)/apartments/types";
 interface ResidentFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  resident?: Resident | null; // If provided, means editing
+  resident?: Resident | null;
   onSuccess?: () => void;
 }
 
@@ -209,7 +209,6 @@ export default function ResidentFormDialog({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Họ tên */}
           <div className="space-y-2">
             <Label htmlFor="fullName">
               Họ tên <span className="text-destructive">*</span>
@@ -226,7 +225,6 @@ export default function ResidentFormDialog({
             )}
           </div>
 
-          {/* Ngày sinh */}
           <div className="space-y-2">
             <Label htmlFor="dob">
               Ngày sinh <span className="text-destructive">*</span>
@@ -243,7 +241,6 @@ export default function ResidentFormDialog({
             )}
           </div>
 
-          {/* Giới tính */}
           <div className="space-y-2">
             <Label htmlFor="gender">Giới tính</Label>
             <Select
@@ -261,7 +258,6 @@ export default function ResidentFormDialog({
             </Select>
           </div>
 
-          {/* CCCD/CMND */}
           <div className="space-y-2">
             <Label htmlFor="identityCard">
               CCCD/CMND <span className="text-destructive">*</span>
@@ -278,7 +274,6 @@ export default function ResidentFormDialog({
             )}
           </div>
 
-          {/* Quê quán */}
           <div className="space-y-2">
             <Label htmlFor="hometown">Quê quán</Label>
             <Input
@@ -289,7 +284,6 @@ export default function ResidentFormDialog({
             />
           </div>
 
-          {/* Nghề nghiệp */}
           <div className="space-y-2">
             <Label htmlFor="job">Nghề nghiệp</Label>
             <Input
@@ -300,7 +294,6 @@ export default function ResidentFormDialog({
             />
           </div>
 
-          {/* Căn hộ */}
           <div className="space-y-2">
             <Label htmlFor="apartmentId">Căn hộ</Label>
             <Select
@@ -322,7 +315,6 @@ export default function ResidentFormDialog({
             </Select>
           </div>
 
-          {/* Trạng thái - chỉ hiển thị khi edit */}
           {isEditing && (
             <div className="space-y-2">
               <Label htmlFor="status">Trạng thái</Label>

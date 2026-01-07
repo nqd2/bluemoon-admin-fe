@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Search, Loader2, Users } from "lucide-react";
+import { Plus, Search, Loader2, Users, Download } from "lucide-react";
 import ResidentTable from "./components/resident-table";
 import ResidentFormDialog from "./components/resident-form-dialog";
 import ResidentPagination from "./components/resident-pagination";
@@ -39,7 +39,6 @@ export default function ResidentPageView({
     totalPages: initialData?.pages || 1,
   };
 
-  // Update search term when URL changes
   useEffect(() => {
     setSearchTerm(searchKeyword);
   }, [searchKeyword]);
@@ -53,9 +52,7 @@ export default function ResidentPageView({
       } else {
         params.delete("keyword");
       }
-      params.set("page", "1"); // Reset to first page on search
-      // limit is already preserving in searchParams or we can rely on prop
-      // Using searchParams.toString() copies existing params including limit
+      params.set("page", "1");
       
       router.push(`/residents?${params.toString()}`);
     });
@@ -72,9 +69,26 @@ export default function ResidentPageView({
     handleRefresh();
   };
 
+  const handleExportExcel = async () => {
+    try {
+      const res = await fetch("/api/export/residents");
+      if (!res.ok) throw new Error("Export failed");
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "danh_sach_cu_dan.xlsx";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Export residents excel error:", error);
+    }
+  };
+
   return (
     <div className="space-y-6">
-      {/* Header */}
         <Card className="mb-6">
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
@@ -89,15 +103,24 @@ export default function ResidentPageView({
                   </p>
                 </div>
               </div>
-              <Button onClick={() => setIsAddDialogOpen(true)}>
-                <Plus className="h-4 w-4 mr-2" />
-                Thêm Cư dân
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={handleExportExcel}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Xuất Excel
+                </Button>
+                <Button onClick={() => setIsAddDialogOpen(true)}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Thêm Cư dân
+                </Button>
+              </div>
             </div>
           </CardHeader>
         </Card>
 
-      {/* Search and Filter Card */}
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="text-lg">Tìm kiếm</CardTitle>
@@ -139,7 +162,6 @@ export default function ResidentPageView({
         </CardContent>
       </Card>
 
-      {/* Table Card */}
       <Card>
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
@@ -159,7 +181,6 @@ export default function ResidentPageView({
         </CardContent>
       </Card>
 
-      {/* Add Dialog */}
       <ResidentFormDialog
         open={isAddDialogOpen}
         onOpenChange={setIsAddDialogOpen}

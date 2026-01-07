@@ -24,9 +24,6 @@ async function getAccessToken(): Promise<string | null> {
   return (session?.user as any)?.accessToken || null;
 }
 
-/**
- * Lấy danh sách apartments đơn giản (không pagination) để dùng trong dropdown
- */
 export async function getApartmentsSimple(): Promise<ActionResponse<Apartment[]>> {
   try {
     const token = await getAccessToken();
@@ -49,7 +46,6 @@ export async function getApartmentsSimple(): Promise<ActionResponse<Apartment[]>
       return { success: false, message: data.message || "Không thể tải danh sách căn hộ" };
     }
 
-    // Transform ownerId thành ownerName
     const apartments = (data.data || []).map((apt: any) => ({
       ...apt,
       ownerName: typeof apt.ownerId === 'object' && apt.ownerId?.fullName 
@@ -111,9 +107,7 @@ export async function getApartments(params?: {
   }
 }
 
-/**
- * Lấy chi tiết căn hộ
- */
+
 export async function getApartmentById(id: string): Promise<ActionResponse<Apartment>> {
   try {
     const token = await getAccessToken();
@@ -136,7 +130,6 @@ export async function getApartmentById(id: string): Promise<ActionResponse<Apart
       return { success: false, message: data.message || "Không tìm thấy căn hộ" };
     }
 
-    // Transform ownerId thành ownerName
     const apartment = data.data;
     if (!apartment) {
       return { success: false, message: "Không tìm thấy căn hộ" };
@@ -149,7 +142,6 @@ export async function getApartmentById(id: string): Promise<ActionResponse<Apart
         : apartment.ownerName || '',
     };
 
-    // Backend trả về { success: true, data: apartment }
     return { success: true, data: transformedApartment };
   } catch (error) {
     console.error("Get apartment detail error:", error);
@@ -157,9 +149,7 @@ export async function getApartmentById(id: string): Promise<ActionResponse<Apart
   }
 }
 
-/**
- * Tạo căn hộ mới
- */
+
 export async function createApartment(
   payload: CreateApartmentPayload
 ): Promise<ActionResponse<Apartment>> {
@@ -196,9 +186,6 @@ export async function createApartment(
   }
 }
 
-/**
- * Thêm thành viên vào căn hộ
- */
 export async function addMemberToApartment(
   apartmentId: string,
   payload: AddMemberPayload

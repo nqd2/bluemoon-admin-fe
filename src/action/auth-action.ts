@@ -87,7 +87,7 @@ export async function loginAction(
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24, // 1 day
+      maxAge: 60 * 60 * 24,
       path: "/",
     });
 
@@ -170,7 +170,7 @@ export async function registerAction(
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
-        maxAge: 60 * 60 * 24, // 1 day
+      maxAge: 60 * 60 * 24,
         path: "/",
       });
     }

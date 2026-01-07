@@ -9,7 +9,6 @@ export const metadata = {
 const RegisterPage = () => {
   return (
     <div className="min-h-screen w-full relative flex items-center justify-center p-4">
-      {/* Background */}
       <div
         className="fixed inset-0 z-0 bg-background"
         style={{
@@ -21,7 +20,6 @@ const RegisterPage = () => {
       />
 
       <div className="w-full max-w-md relative z-10 flex flex-col items-center gap-8">
-        {/* Logo */}
         <div className="w-[240px]">
           <Image
             src="/images/logo/horizontal-logo.png"
@@ -33,7 +31,6 @@ const RegisterPage = () => {
           />
         </div>
 
-        {/* Register Form */}
         <RegisterForm />
       </div>
     </div>

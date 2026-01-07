@@ -12,7 +12,6 @@ import type {
   UpdateResidentPayload,
 } from "@/app/(dashboard)/residents/types";
 
-// Re-export types for convenience
 export type { Resident, ResidentListResponse, CreateResidentPayload, UpdateResidentPayload };
 
 interface ActionResponse<T = any> {
@@ -22,9 +21,6 @@ interface ActionResponse<T = any> {
   errors?: Record<string, string[]>;
 }
 
-/**
- * Lấy access token từ session
- */
 async function getAccessToken(): Promise<string | null> {
   const session = await getServerSession(authOptions);
   return (session?.user as any)?.accessToken || null;
@@ -81,9 +77,6 @@ export async function getResidents(params?: {
   }
 }
 
-/**
- * Lấy chi tiết một resident theo ID
- */
 export async function getResidentById(id: string): Promise<ActionResponse<Resident>> {
   try {
     const token = await getAccessToken();
@@ -123,9 +116,6 @@ export async function getResidentById(id: string): Promise<ActionResponse<Reside
   }
 }
 
-/**
- * Tạo mới resident
- */
 export async function createResident(
   payload: CreateResidentPayload
 ): Promise<ActionResponse<Resident>> {
@@ -171,9 +161,6 @@ export async function createResident(
   }
 }
 
-/**
- * Cập nhật resident
- */
 export async function updateResident(
   id: string,
   payload: UpdateResidentPayload
@@ -220,9 +207,6 @@ export async function updateResident(
   }
 }
 
-/**
- * Xóa resident
- */
 export async function deleteResident(id: string): Promise<ActionResponse> {
   try {
     const token = await getAccessToken();

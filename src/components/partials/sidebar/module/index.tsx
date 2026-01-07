@@ -15,20 +15,18 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import MenuOverlayPortal from "./MenuOverlayPortal";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
+import { MenuItemProps } from "@/config/menus";
 const ModuleSidebar = ({ trans }: { trans: any }) => {
-  const menus = menusConfig?.sidebarNav?.modern || [];
+  const menus: MenuItemProps[] = menusConfig?.sidebarNav?.modern || [];
   const { subMenu, setSubmenu, collapsed, setCollapsed, sidebarBg } =
     useSidebar();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [currentSubMenu, setCurrentSubMenu] = useState<any[]>([]);
   const [nestedIndex, setNestedIndex] = useState<number | null>(null);
   const [multiNestedIndex, setMultiNestedIndex] = useState<number | null>(null);
-  // mobile menu overlay
   const [menuOverlay, setMenuOverlay] = useState<boolean>(false);
   const isDesktop = useMediaQuery("(min-width: 1280px)");
 
-  // location
   const pathname = usePathname();
   const locationName = getDynamicPath(pathname);
 
@@ -45,15 +43,11 @@ const ModuleSidebar = ({ trans }: { trans: any }) => {
       setSubmenu(true);
       setCollapsed(true);
 
-      if (!isDesktop) {
-        // when location match need to close the sub menu
-        if (isLocationMatch(menus[index].title, locationName)) {
-          setSubmenu(false);
-        }
+      if (!isDesktop && isLocationMatch(menus[index].title, locationName)) {
+        setSubmenu(false);
       }
     }
   };
-  // for second level  menu
   const toggleNested = (subIndex: number) => {
     if (nestedIndex === subIndex) {
       setNestedIndex(null);
@@ -62,7 +56,6 @@ const ModuleSidebar = ({ trans }: { trans: any }) => {
     }
   };
 
-  // for third level menu
   const toggleMultiNested = (index: number) => {
     if (multiNestedIndex === index) {
       setMultiNestedIndex(null);
@@ -84,7 +77,6 @@ const ModuleSidebar = ({ trans }: { trans: any }) => {
     setSubmenu(false);
     setCollapsed(false);
   }
-  //
   const getMenuTitle = () => {
     if (activeIndex !== null) {
       return menus[activeIndex].title;
@@ -158,7 +150,6 @@ const ModuleSidebar = ({ trans }: { trans: any }) => {
               <SiteLogo className=" mx-auto text-primary h-8 w-8" />
             </Link>
           </div>
-          {/* end logo */}
           <ScrollArea className=" pt-6 grow ">
             {menus.map((item, i) => (
               <div
@@ -178,7 +169,6 @@ const ModuleSidebar = ({ trans }: { trans: any }) => {
           </ScrollArea>
           <FooterMenu />
         </div>
-        {/* end small menu */}
 
         <div
           className={cn(
@@ -241,7 +231,6 @@ const ModuleSidebar = ({ trans }: { trans: any }) => {
           </ScrollArea>
           <LogoutFooter />
         </div>
-        {/* end main panel */}
       </div>
       {!isDesktop && (
         <MenuOverlayPortal

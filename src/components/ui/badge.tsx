@@ -59,7 +59,6 @@ const badgeVariants = cva(
         color: "default",
         className: "text-primary",
       },
-      // soft button variant
       {
         variant: "soft",
         color: "default",

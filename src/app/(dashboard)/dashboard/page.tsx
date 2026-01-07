@@ -7,7 +7,6 @@ export const dynamic = "force-dynamic";
 const Dashboard = async () => {
   const trans = await getDictionary();
 
-  // Fetch data
   const statsRes = await getDashboardStats();
 
   return (

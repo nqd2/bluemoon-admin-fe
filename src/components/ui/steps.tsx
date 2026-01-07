@@ -101,7 +101,6 @@ const Stepper = React.forwardRef<HTMLOListElement, StepperProps>(
             count,
             index: index,
             current: current,
-            //...child.props ,
             gap: gap,
             direction: direction,
             alternativeLabel: alternativeLabel,
@@ -181,14 +180,11 @@ const Step = React.forwardRef<HTMLLIElement, StepProps>(
     };
 
     const stepBox = getStepBox(current, index, status);
-    // Check if content is 'right'
     const isContentRight = content === "right";
-    // Check if any of the specific props are present
     const hasSpecificProps =
       gap !== undefined ||
       alternativeLabel !== undefined ||
       direction !== undefined;
-    // has render
     const renderChildren =
       !isContentRight || (isContentRight && !hasSpecificProps);
     return (

@@ -130,8 +130,8 @@ const Timeline = React.forwardRef<HTMLOListElement, TimelineProps>(
       >
         {childItem.map((child, index) => {
           const isLast = index === childItem.length - 1;
-          const even = index % 2 === 0; // Check if index is even
-          const odd = index % 2 !== 0; // Check if index is odd
+          const even = index % 2 === 0;
+          const odd = index % 2 !== 0;
           return React.cloneElement(child as React.ReactElement, {
             ...props,
             isLast,
@@ -223,8 +223,6 @@ const TimelineItem = React.forwardRef<HTMLLIElement, TimelineItemProps>(
   }
 );
 TimelineItem.displayName = "TimelineItem";
-
-// time line separator
 
 const TimelineSeparator = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, children, ...props }, ref) => {
