@@ -63,9 +63,11 @@ export default function FeeStatusView({ feeInfo, apartments }: FeeStatusViewProp
           </div>
           <div>
             <h1 className="text-2xl font-bold text-default-900">{feeInfo.title}</h1>
-            <p className="text-sm text-default-500">
-              Đơn giá: {formatVND(feeInfo.amount)} / {feeInfo.unit}
-            </p>
+            {feeInfo.amount > 0 && feeInfo.unit && (
+              <p className="text-sm text-default-500">
+                Đơn giá: {formatVND(feeInfo.amount)} / {feeInfo.unit}
+              </p>
+            )}
           </div>
         </div>
       </div>

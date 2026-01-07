@@ -36,10 +36,9 @@ const DeleteConfirmationDialog = ({ open, onClose, onConfirm, defaultToast = tru
     <AlertDialog open={open}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>Bạn có chắc chắn muốn xóa không?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+            Hành động này không thể hoàn tác. Điều này sẽ xóa vĩnh viễn dữ liệu của bạn khỏi hệ thống.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

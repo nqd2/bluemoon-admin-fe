@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 
 interface FeeSelectProps {
   value: string;
-  onChange: (value: string) => void;
+  onChange: (value: string, feeInfo?: Fee) => void;
   error?: boolean;
 }
 
@@ -45,8 +45,13 @@ export default function FeeSelect({ value, onChange, error }: FeeSelectProps) {
 
   const selectedFee = fees.find((f) => f._id === value);
 
+  const handleChange = (newValue: string) => {
+    const fee = fees.find((f) => f._id === newValue);
+    onChange(newValue, fee);
+  };
+
   return (
-    <Select value={value} onValueChange={onChange} disabled={loading}>
+    <Select value={value} onValueChange={handleChange} disabled={loading}>
       <SelectTrigger
         className={cn(error && "border-destructive text-destructive")}
       >

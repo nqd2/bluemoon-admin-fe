@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Search, Loader2, Users } from "lucide-react";
+import { Plus, Search, Loader2, Users, Download } from "lucide-react";
 import ResidentTable from "./components/resident-table";
 import ResidentFormDialog from "./components/resident-form-dialog";
 import ResidentPagination from "./components/resident-pagination";
@@ -72,6 +72,24 @@ export default function ResidentPageView({
     handleRefresh();
   };
 
+  const handleExportExcel = async () => {
+    try {
+      const res = await fetch("/api/export/residents");
+      if (!res.ok) throw new Error("Export failed");
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "danh_sach_cu_dan.xlsx";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Export residents excel error:", error);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -89,10 +107,20 @@ export default function ResidentPageView({
                   </p>
                 </div>
               </div>
-              <Button onClick={() => setIsAddDialogOpen(true)}>
-                <Plus className="h-4 w-4 mr-2" />
-                Thêm Cư dân
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={handleExportExcel}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Xuất Excel
+                </Button>
+                <Button onClick={() => setIsAddDialogOpen(true)}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Thêm Cư dân
+                </Button>
+              </div>
             </div>
           </CardHeader>
         </Card>

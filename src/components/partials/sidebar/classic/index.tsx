@@ -95,51 +95,53 @@ const ClassicSidebar = ({ trans }: { trans: string }) => {
             "text-start": collapsed && hovered,
           })}
         >
-          {menus.map((item, i) => (
-            <li key={`menu_key_${i}`}>
-              {/* single menu  */}
+          {menus.map((rawItem: any, i: number) => {
+            const item = rawItem as any;
+            const hasChild = Array.isArray(item.child);
+            const isHeader = !!item.isHeader;
 
-              {!item.child && !item.isHeader && (
-                <SingleMenuItem
-                  item={item}
-                  collapsed={collapsed}
-                  hovered={hovered}
-                  trans={trans}
-                />
-              )}
-
-              {/* menu label */}
-              {item.isHeader && !item.child && (!collapsed || hovered) && (
-                <MenuLabel item={item} trans={trans} />
-              )}
-
-              {/* sub menu */}
-              {item.child && (
-                <>
-                  <SubMenuHandler
+            return (
+              <li key={`menu_key_${i}`}>
+                {!hasChild && !isHeader && (
+                  <SingleMenuItem
                     item={item}
-                    toggleSubmenu={toggleSubmenu}
-                    index={i}
-                    activeSubmenu={activeSubmenu}
                     collapsed={collapsed}
                     hovered={hovered}
                     trans={trans}
                   />
+                )}
 
-                  {(!collapsed || hovered) && (
-                    <NestedSubMenu
-                      toggleMultiMenu={toggleMultiMenu}
-                      activeMultiMenu={activeMultiMenu}
-                      activeSubmenu={activeSubmenu}
+                {isHeader && !hasChild && (!collapsed || hovered) && (
+                  <MenuLabel item={item} trans={trans} />
+                )}
+
+                {hasChild && (
+                  <>
+                    <SubMenuHandler
                       item={item}
+                      toggleSubmenu={toggleSubmenu}
                       index={i}
+                      activeSubmenu={activeSubmenu}
+                      collapsed={collapsed}
+                      hovered={hovered}
                       trans={trans}
                     />
-                  )}
-                </>
-              )}
-            </li>
-          ))}
+
+                    {(!collapsed || hovered) && (
+                      <NestedSubMenu
+                        toggleMultiMenu={toggleMultiMenu}
+                        activeMultiMenu={activeMultiMenu}
+                        activeSubmenu={activeSubmenu}
+                        item={item}
+                        index={i}
+                        trans={trans}
+                      />
+                    )}
+                  </>
+                )}
+              </li>
+            );
+          })}
         </ul>
         {!collapsed && (
           <div className="-mx-2 ">
