@@ -91,7 +91,7 @@ export default function ResidentPageView({
     <div className="space-y-6">
         <Card className="mb-6">
           <CardHeader className="pb-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col max-[500px]:gap-4 gap-0 items-start justify-between max-[500px]:items-stretch">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-primary/10 rounded-lg">
                   <Users className="h-6 w-6 text-primary" />
@@ -103,16 +103,17 @@ export default function ResidentPageView({
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 max-[500px]:flex-col max-[500px]:w-full">
                 <Button
                   variant="outline"
                   type="button"
                   onClick={handleExportExcel}
+                  className="max-[500px]:w-full"
                 >
                   <Download className="h-4 w-4 mr-2" />
                   Xuất Excel
                 </Button>
-                <Button onClick={() => setIsAddDialogOpen(true)}>
+                <Button onClick={() => setIsAddDialogOpen(true)} className="max-[500px]:w-full">
                   <Plus className="h-4 w-4 mr-2" />
                   Thêm Cư dân
                 </Button>

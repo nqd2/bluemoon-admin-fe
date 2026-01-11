@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Eye } from "lucide-react";
+import { MoreVertical } from "lucide-react";
 import Link from "next/link";
 import type { Fee } from "../types";
 
@@ -38,11 +38,20 @@ export default function FeeTable({ fees }: FeeTableProps) {
 
   const getTypeBadge = (type: string) => {
     if (type === "Service") {
-      return <Badge color="info">Phí dịch vụ</Badge>;
+      return <Badge color="info">Phí cố định</Badge>;
     }
     if (type === "Contribution") {
       return <Badge color="warning">Phí đóng góp</Badge>;
     }
+
+    if (type === "Other") {
+      return <Badge color="default">Khác</Badge>;
+    }
+
+    if (type === "Utility") {
+      return <Badge color="default">Phí dịch vụ </Badge>;
+    }
+
     return <Badge color="default">{type}</Badge>;
   };
 
@@ -69,7 +78,7 @@ export default function FeeTable({ fees }: FeeTableProps) {
             <TableCell className="text-right">
               <Button asChild variant="ghost" size="icon">
                 <Link href={`/fees/${fee._id}`}>
-                  <Eye className="h-4 w-4 text-primary" />
+                  <MoreVertical className="h-4 w-4 text-primary" />
                 </Link>
               </Button>
             </TableCell>

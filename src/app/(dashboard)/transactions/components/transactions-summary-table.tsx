@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Eye, Loader2, Download } from "lucide-react";
+import { MoreVertical, Loader2, Download } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import TransactionDetailDialog from "./transactions-detail-dialog";
 import type { TransactionSummary, ApartmentTransactionRecord } from "../types";
@@ -155,7 +155,7 @@ const TransactionsSummaryTable = () => {
                         setOpen(true);
                       }}
                     >
-                      <Eye className="h-4 w-4" />
+                      <MoreVertical className="h-4 w-4" />
                     </Button>
                   </TableCell>
                 </TableRow>

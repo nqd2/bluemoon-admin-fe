@@ -71,23 +71,27 @@ export default function FeePageView({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-primary/10 rounded-lg">
-            <DollarSign className="h-6 w-6 text-primary" />
+      <Card className="mb-6">
+        <CardHeader className="pb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <DollarSign className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-default-900">Quản lý Khoản thu</h1>
+                <p className="text-sm text-default-500">
+                  Tổng số: {pagination.total} khoản thu
+                </p>
+              </div>
+            </div>
+            <Button onClick={() => setIsCreateOpen(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Tạo Khoản thu
+            </Button>
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-default-900">Quản lý Khoản thu</h1>
-            <p className="text-sm text-default-500">
-              Tổng số: {pagination.total} khoản thu
-            </p>
-          </div>
-        </div>
-        <Button onClick={() => setIsCreateOpen(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          Tạo Khoản thu
-        </Button>
-      </div>
+        </CardHeader>
+      </Card>
 
       <Card>
         <CardHeader className="pb-4">
@@ -97,8 +101,9 @@ export default function FeePageView({
           <Tabs value={activeTab} onValueChange={handleTabChange}>
             <TabsList>
               <TabsTrigger value="all">Tất cả</TabsTrigger>
-              <TabsTrigger value="Service">Phí dịch vụ</TabsTrigger>
+              <TabsTrigger value="Service">Phí cố định</TabsTrigger>
               <TabsTrigger value="Contribution">Phí đóng góp</TabsTrigger>
+              <TabsTrigger value="Utility">Phí dịch vụ</TabsTrigger>  
             </TabsList>
             <TabsContent value={activeTab} className="mt-4">
               <div className="space-y-4">

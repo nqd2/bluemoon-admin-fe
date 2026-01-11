@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react";
+import { MoreVertical } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import type { Apartment } from "../types";
@@ -56,7 +56,7 @@ export default function ApartmentTable({ apartments }: ApartmentTableProps) {
             <TableCell className="text-right">
               <Button asChild variant="ghost" size="icon">
                 <Link href={`/apartments/${apt._id}`}>
-                  <Eye className="h-4 w-4 text-primary" />
+                  <MoreVertical className="h-4 w-4 text-primary" />
                 </Link>
               </Button>
             </TableCell>

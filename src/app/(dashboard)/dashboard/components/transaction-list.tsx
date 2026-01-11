@@ -93,7 +93,7 @@ const TransactionList = ({ title, transactions = [] }: TransactionListProps) => 
                       {formatVND(item.totalAmount)}
                     </Badge>
                     <div className="text-xs text-default-400 mt-1 capitalize">
-                       {item.status}
+                       {item.status === "paid" ? "Đã thanh toán" : item.status === "pending" ? "Chờ thanh toán" : item.status === "failed" ? "Thất bại" : item.status}
                     </div>
                   </div>
                 </div>
