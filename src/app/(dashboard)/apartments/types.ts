@@ -17,7 +17,8 @@ export interface Apartment {
 }
 
 export interface CreateApartmentPayload {
-  ownerId: string;
+  name: string;
+  ownerId?: string;
   apartmentNumber: string;
   building: string;
   area: number;

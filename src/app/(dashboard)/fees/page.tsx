@@ -26,8 +26,8 @@ async function FeeContent({
   const page = typeof searchParams.page === "string" ? parseInt(searchParams.page) : 1;
   const limit = typeof searchParams.limit === "string" ? parseInt(searchParams.limit) : 10;
   const type = typeof searchParams.type === "string" 
-    ? (searchParams.type === "Service" || searchParams.type === "Contribution" 
-      ? searchParams.type 
+    ? (searchParams.type === "Service" || searchParams.type === "Contribution" || searchParams.type === "Utility"
+      ? searchParams.type as "Service" | "Contribution" | "Utility"
       : undefined)
     : undefined;
 

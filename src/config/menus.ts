@@ -55,11 +55,11 @@ export const menusConfig = {
         icon: Graph,
         href: "/transactions",
       },
-      {
-        title: "Mã đăng ký",
-        icon: Sheild,
-        href: "/registration-codes",
-      },
+      // {
+      //   title: "Mã đăng ký",
+      //   icon: Sheild,
+      //   href: "/registration-codes",
+      // },
       {
         title: "Đăng xuất",
         icon: UserSign,
@@ -104,11 +104,11 @@ export const menusConfig = {
         isHeader: true,
         title: "Hệ thống",
       },
-      {
-        title: "Mã đăng ký",
-        icon: Sheild,
-        href: "/registration-codes",
-      },
+      // {
+      //   title: "Mã đăng ký",
+      //   icon: Sheild,
+      //   href: "/registration-codes",
+      // },
       {
         title: "Đăng xuất",
         icon: UserSign,

@@ -44,7 +44,7 @@ export default function FeeFormDialog({
     description: "",
     type: "Service" as FeeType,
     amount: "",
-    unit: "m2",
+    unit: "m2" as "m2" | "khẩu" | "hộ" | "kWh" | "m3",
   });
 
   const validateForm = (): boolean => {
@@ -52,11 +52,13 @@ export default function FeeFormDialog({
 
     if (!formData.title.trim()) {
       newErrors.title = "Tên khoản thu là bắt buộc";
+    } else if (formData.title.trim().length < 5) {
+      newErrors.title = "Tên khoản thu phải có ít nhất 5 ký tự";
     }
     if (!formData.amount) {
       newErrors.amount = "Đơn giá là bắt buộc";
-    } else if (isNaN(Number(formData.amount)) || Number(formData.amount) <= 0) {
-      newErrors.amount = "Đơn giá phải là số dương";
+    } else if (isNaN(Number(formData.amount)) || Number(formData.amount) < 0) {
+      newErrors.amount = "Đơn giá phải là số không âm";
     }
     if (!formData.unit.trim()) {
       newErrors.unit = "Đơn vị tính là bắt buộc";
@@ -87,11 +89,24 @@ export default function FeeFormDialog({
           description: "",
           type: "Service",
           amount: "",
-          unit: "m2",
+          unit: "m2" as "m2" | "khẩu" | "hộ" | "kWh" | "m3",
         });
+        setErrors({});
         onOpenChange(false);
         onSuccess?.();
       } else {
+        const serverErrors: Record<string, string> = {};
+        if (result.errors) {
+          Object.keys(result.errors).forEach((key) => {
+            const errorMessages = result.errors![key];
+            if (Array.isArray(errorMessages) && errorMessages.length > 0) {
+              serverErrors[key] = errorMessages[0];
+            }
+          });
+        }
+        if (Object.keys(serverErrors).length > 0) {
+          setErrors(serverErrors);
+        }
         toast.error(result.message || "Có lỗi xảy ra");
       }
     } catch (error) {
@@ -170,7 +185,7 @@ export default function FeeFormDialog({
               <Select
                 value={formData.unit}
                 onValueChange={(value) => {
-                  setFormData({ ...formData, unit: value });
+                  setFormData({ ...formData, unit: value as "m2" | "khẩu" | "hộ" | "kWh" | "m3" });
                   if (errors.unit) {
                     setErrors({ ...errors, unit: "" });
                   }
@@ -181,8 +196,10 @@ export default function FeeFormDialog({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="m2">m²</SelectItem>
-                  <SelectItem value="person">Người</SelectItem>
-                  <SelectItem value="household">Hộ</SelectItem>
+                  <SelectItem value="khẩu">Khẩu</SelectItem>
+                  <SelectItem value="hộ">Hộ</SelectItem>
+                  <SelectItem value="kWh">kWh</SelectItem>
+                  <SelectItem value="m3">m³</SelectItem>
                 </SelectContent>
               </Select>
               {errors.unit && <p className="text-sm text-destructive">{errors.unit}</p>}

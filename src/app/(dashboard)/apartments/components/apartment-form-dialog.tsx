@@ -33,7 +33,6 @@ export default function ApartmentFormDialog({
 
   const [formData, setFormData] = useState({
     ownerId: "",
-    name: "",
     apartmentNumber: "",
     building: "",
     area: "",
@@ -43,8 +42,6 @@ export default function ApartmentFormDialog({
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.ownerId) newErrors.ownerId = "Chủ hộ là bắt buộc";
-    if (!formData.name.trim()) newErrors.name = "Tên hộ là bắt buộc";
     if (!formData.apartmentNumber.trim()) newErrors.apartmentNumber = "Số phòng là bắt buộc";
     if (!formData.building.trim()) newErrors.building = "Tòa nhà là bắt buộc";
     if (!formData.area) {
@@ -63,17 +60,19 @@ export default function ApartmentFormDialog({
 
     setIsLoading(true);
     try {
+      const name = `${formData.building.trim()}${formData.apartmentNumber.trim()}`;
       const result = await createApartment({
-        ownerId: formData.ownerId,
+        name,
         apartmentNumber: formData.apartmentNumber,
         building: formData.building,
         area: Number(formData.area),
+        ownerId: formData.ownerId || undefined,
         description: formData.description || undefined,
       });
 
       if (result.success) {
         toast.success(result.message || "Tạo căn hộ thành công");
-        setFormData({ ownerId: "", name: "", apartmentNumber: "", building: "", area: "", description: "" });
+        setFormData({ ownerId: "", apartmentNumber: "", building: "", area: "", description: "" });
         onOpenChange(false);
         onSuccess?.();
       } else {
@@ -98,18 +97,13 @@ export default function ApartmentFormDialog({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label>Chủ hộ <span className="text-destructive">*</span></Label>
+            <Label>Chủ hộ</Label>
             <ResidentSelect
               value={formData.ownerId}
               onChange={(val) => {
                 setFormData({ ...formData, ownerId: val });
-                if (errors.ownerId) {
-                  setErrors({ ...errors, ownerId: "" });
-                }
               }}
-              error={!!errors.ownerId}
             />
-            {errors.ownerId && <p className="text-sm text-destructive">{errors.ownerId}</p>}
           </div>
 
 

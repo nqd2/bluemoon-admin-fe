@@ -23,7 +23,7 @@ async function getAccessToken(): Promise<string | null> {
 export interface GetFeesParams {
   page?: number;
   limit?: number;
-  type?: "Service" | "Contribution";
+  type?: "Service" | "Contribution" | "Utility";
 }
 
 export async function getFees(params: GetFeesParams = {}): Promise<FeeListResponse> {
@@ -96,9 +96,11 @@ export async function createFee(payload: CreateFeePayload): Promise<FeeResponse>
 
     const data = await res.json();
     if (!res.ok) {
+      console.error("Create fee API error:", data);
       return {
         success: false,
         message: data.message || "Không thể tạo khoản thu",
+        errors: data.errors,
       };
     }
 

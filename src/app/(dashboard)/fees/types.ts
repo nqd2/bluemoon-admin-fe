@@ -1,4 +1,4 @@
-export type FeeType = "Service" | "Contribution";
+export type FeeType = "Service" | "Contribution" | "Utility";
 
 export interface Fee {
   _id: string;
@@ -37,6 +37,7 @@ export interface FeeResponse {
   success: boolean;
   data?: Fee;
   message?: string;
+  errors?: Record<string, string[]>;
 }
 
 export type PaymentStatus = "PAID" | "UNPAID";

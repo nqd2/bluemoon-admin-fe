@@ -19,7 +19,7 @@ interface FeePageViewProps {
     total: number;
     totalPages: number;
   };
-  initialType?: "Service" | "Contribution";
+  initialType?: "Service" | "Contribution" | "Utility";
 }
 
 export default function FeePageView({
@@ -32,7 +32,7 @@ export default function FeePageView({
   const [isPending, startTransition] = useTransition();
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"all" | "Service" | "Contribution">(
+  const [activeTab, setActiveTab] = useState<"all" | "Service" | "Contribution" | "Utility">(
     initialType || "all"
   );
 
@@ -41,7 +41,7 @@ export default function FeePageView({
 
   useEffect(() => {
     const typeParam = searchParams.get("type");
-    if (typeParam === "Service" || typeParam === "Contribution") {
+    if (typeParam === "Service" || typeParam === "Contribution" || typeParam === "Utility") {
       setActiveTab(typeParam);
     } else {
       setActiveTab("all");
@@ -49,7 +49,7 @@ export default function FeePageView({
   }, [searchParams]);
 
   const handleTabChange = (value: string) => {
-    const tabValue = value as "all" | "Service" | "Contribution";
+    const tabValue = value as "all" | "Service" | "Contribution" | "Utility";
     setActiveTab(tabValue);
     startTransition(() => {
       const params = new URLSearchParams(searchParams.toString());
