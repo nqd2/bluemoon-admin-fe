@@ -100,6 +100,11 @@ export async function getApartments(params?: {
       }));
     }
 
+    // Map pages to totalPages if needed
+    if (data.pages && !data.totalPages) {
+      data.totalPages = data.pages;
+    }
+
     return { success: true, data };
   } catch (error) {
     console.error("Get apartments error:", error);

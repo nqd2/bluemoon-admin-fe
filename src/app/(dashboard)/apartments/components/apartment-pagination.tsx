@@ -11,6 +11,7 @@ import {
   PaginationNext,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
+
 import {
   Select,
   SelectContent,
@@ -23,12 +24,14 @@ interface ApartmentPaginationProps {
   currentPage: number;
   totalPages: number;
   limit?: number;
+  basePath?: string;
 }
 
 export default function ApartmentPagination({
   currentPage,
   totalPages,
   limit = 10,
+  basePath = "/apartments",
 }: ApartmentPaginationProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -36,7 +39,7 @@ export default function ApartmentPagination({
   const createPageUrl = (page: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", page.toString());
-    return `/apartments?${params.toString()}`;
+    return `${basePath}?${params.toString()}`;
   };
 
   const handlePageChange = (page: number) => {
@@ -48,7 +51,7 @@ export default function ApartmentPagination({
     const params = new URLSearchParams(searchParams.toString());
     params.set("limit", value);
     params.set("page", "1");
-    router.push(`/apartments?${params.toString()}`);
+    router.push(`${basePath}?${params.toString()}`);
   };
 
   const getPageNumbers = () => {
@@ -92,57 +95,57 @@ export default function ApartmentPagination({
         </div>
       </div>
 
-      {totalPages > 1 && (
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                href={createPageUrl(currentPage - 1)}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePageChange(currentPage - 1);
-                }}
-                className={
-                  currentPage <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"
-                }
-              />
-            </PaginationItem>
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              href={createPageUrl(currentPage - 1)}
+              onClick={(e) => {
+                e.preventDefault();
+                handlePageChange(currentPage - 1);
+              }}
+              className={
+                currentPage <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"
+              }
+            />
+          </PaginationItem>
 
-            {getPageNumbers().map((page, index) => (
-              <PaginationItem key={index}>
-                {page === "ellipsis" ? (
-                  <PaginationEllipsis />
-                ) : (
-                  <PaginationLink
-                    href={createPageUrl(page)}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePageChange(page);
-                    }}
-                    isActive={currentPage === page}
-                    className="cursor-pointer"
-                  >
-                    {page}
-                  </PaginationLink>
-                )}
-              </PaginationItem>
-            ))}
-
-            <PaginationItem>
-              <PaginationNext
-                href={createPageUrl(currentPage + 1)}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePageChange(currentPage + 1);
-                }}
-                className={
-                  currentPage >= totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"
-                }
-              />
+          {getPageNumbers().map((page, index) => (
+            <PaginationItem key={index}>
+              {page === "ellipsis" ? (
+                <PaginationEllipsis />
+              ) : (
+                <PaginationLink
+                  href={createPageUrl(page)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handlePageChange(page);
+                  }}
+                  isActive={currentPage === page}
+                  className="cursor-pointer"
+                >
+                  {page}
+                </PaginationLink>
+              )}
             </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      )}
+          ))}
+
+          <PaginationItem>
+            <PaginationNext
+              href={createPageUrl(currentPage + 1)}
+              onClick={(e) => {
+                e.preventDefault();
+                handlePageChange(currentPage + 1);
+              }}
+              className={
+                currentPage >= totalPages
+                  ? "pointer-events-none opacity-50"
+                  : "cursor-pointer"
+              }
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 }

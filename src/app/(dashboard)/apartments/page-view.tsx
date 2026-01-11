@@ -36,7 +36,7 @@ export default function ApartmentPageView({
     page: initialData?.page || 1, 
     limit: limit, 
     total: initialData?.total || 0, 
-    totalPages: initialData?.totalPages || 1 
+    totalPages: initialData?.totalPages || initialData?.pages || 1 
   };
 
   useEffect(() => {

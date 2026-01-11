@@ -34,9 +34,10 @@ export interface ApartmentListResponse {
   success: boolean;
   data: Apartment[];
   page: number;
-  limit: number;
+  limit?: number;
   total: number;
-  totalPages: number;
+  pages?: number;
+  totalPages?: number;
   message?: string;
 }
 

@@ -145,7 +145,7 @@ export async function createResident(
       };
     }
 
-    revalidatePath("/residents");
+    revalidatePath("/residents", "layout");
     
     return {
       success: true,
@@ -191,7 +191,7 @@ export async function updateResident(
       };
     }
 
-    revalidatePath("/residents");
+    revalidatePath("/residents", "layout");
 
     return {
       success: true,
@@ -232,7 +232,7 @@ export async function deleteResident(id: string): Promise<ActionResponse> {
       };
     }
 
-    revalidatePath("/residents");
+    revalidatePath("/residents", "layout");
 
     return {
       success: true,

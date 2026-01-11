@@ -66,7 +66,9 @@ export default function ResidentPageView({
 
   const handleAddSuccess = () => {
     setIsAddDialogOpen(false);
-    handleRefresh();
+    startTransition(() => {
+      router.refresh();
+    });
   };
 
   const handleExportExcel = async () => {
